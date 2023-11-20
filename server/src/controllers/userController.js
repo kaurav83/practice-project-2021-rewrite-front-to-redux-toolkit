@@ -104,6 +104,12 @@ module.exports.changeMark = async (req, res, next) => {
 };
 
 module.exports.payment = async (req, res, next) => {
+  const bankRowByCardNumber = await bd.Banks.findOne({
+    where: {cardNumber: req.body.number.replace(/ /g, '')}
+  });
+
+  const { name } = bankRowByCardNumber;
+
   let transaction;
   try {
     transaction = await bd.sequelize.transaction();
@@ -111,9 +117,9 @@ module.exports.payment = async (req, res, next) => {
       balance: bd.sequelize.literal(`
                 CASE
             WHEN "cardNumber"='${ req.body.number.replace(/ /g,
-    '') }' AND "cvc"='${ req.body.cvc }' AND "expiry"='${ req.body.expiry }'
+    '') }' AND "cvc"='${ req.body.cvc }' AND "expiry"='${ req.body.expiry }' AND "name"='${req.body.name.toLowerCase() === name.toLowerCase() ? name : req.body.name}'
                 THEN "balance"-${ req.body.price }
-            WHEN "cardNumber"='${ CONSTANTS.SQUADHELP_BANK_NUMBER }' AND "cvc"='${ CONSTANTS.SQUADHELP_BANK_CVC }' AND "expiry"='${ CONSTANTS.SQUADHELP_BANK_EXPIRY }'
+            WHEN "cardNumber"='${ CONSTANTS.SQUADHELP_BANK_NUMBER }' AND "cvc"='${ CONSTANTS.SQUADHELP_BANK_CVC }' AND "expiry"='${ CONSTANTS.SQUADHELP_BANK_EXPIRY }' AND "name"='${ CONSTANTS.SQUADHELP_BANK_NAME }'
                 THEN "balance"+${ req.body.price } END
         `),
     },

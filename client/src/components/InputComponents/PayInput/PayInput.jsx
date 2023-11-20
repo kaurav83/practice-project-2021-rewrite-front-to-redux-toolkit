@@ -4,7 +4,7 @@ import InputMask from 'react-input-mask';
 import { useField } from 'formik';
 
 const PayInput = props => {
-  const { label, changeFocus, classes, isInputMask, mask } = props;
+  const { label, changeFocus, classes, isInputMask, mask, errorMessage } = props;
   const [field, meta, helpers] = useField(props.name);
   const { touched, error } = meta;
 
@@ -19,7 +19,7 @@ const PayInput = props => {
           })}
         />
         {touched && error && (
-          <span className={classes.error}>{error.message}!</span>
+          <span className={classes.error}>{errorMessage}!</span>
         )}
       </div>
     );
@@ -38,7 +38,7 @@ const PayInput = props => {
           onFocus={() => changeFocus(field.name)}
         />
         {touched && error && (
-          <span className={classes.error}>{error.message}!</span>
+          <span className={classes.error}>{errorMessage}!</span>
         )}
       </div>
     );
@@ -54,7 +54,7 @@ const PayInput = props => {
         onFocus={() => changeFocus(field.name)}
       />
       {touched && error && (
-        <span className={classes.error}>{error.message}!</span>
+        <span className={classes.error}>{errorMessage}!</span>
       )}
     </div>
   );

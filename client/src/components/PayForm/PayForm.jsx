@@ -32,7 +32,7 @@ const PayForm = (props) => {
         onSubmit={pay}
         validationSchema={Schems.PaymentSchema}
       >
-        {({ values }) => {
+        {({ errors, values }) => {
           const { name, number, expiry, cvc } = values;
 
           return (
@@ -59,6 +59,7 @@ const PayForm = (props) => {
                     }}
                     type="text"
                     label="name"
+                    errorMessage={errors.name}
                     changeFocus={changeFocusOnCard}
                   />
                 </div>
@@ -82,7 +83,7 @@ const PayForm = (props) => {
                   <span>Card Number</span>
                   <PayInput
                     isInputMask
-                    mask="9999 9999 9999 9999 999"
+                    mask="9999 9999 9999 9999"
                     name="number"
                     classes={{
                       container: styles.inputContainer,
@@ -92,6 +93,7 @@ const PayForm = (props) => {
                     }}
                     type="text"
                     label="card number"
+                    errorMessage={errors.number}
                     changeFocus={changeFocusOnCard}
                   />
                 </div>
@@ -110,6 +112,7 @@ const PayForm = (props) => {
                       }}
                       type="text"
                       label="expiry"
+                      errorMessage={errors.expiry}
                       changeFocus={changeFocusOnCard}
                     />
                   </div>
@@ -127,6 +130,7 @@ const PayForm = (props) => {
                       }}
                       type="text"
                       label="cvc"
+                      errorMessage={errors.cvc}
                       changeFocus={changeFocusOnCard}
                     />
                   </div>

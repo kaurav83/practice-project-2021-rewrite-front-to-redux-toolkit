@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import { pay, clearPaymentStore } from '../../store/slices/paymentSlice';
 import PayForm from '../../components/PayForm/PayForm';
@@ -14,12 +15,13 @@ const Payment = (props) => {
     Object.keys(contests).forEach((key) =>
       contestArray.push({ ...contests[key] })
     );
-    const { number, expiry, cvc } = values;
+    const { number, expiry, cvc, name } = values;
     const data = new FormData();
     for (let i = 0; i < contestArray.length; i++) {
       data.append('files', contestArray[i].file);
       contestArray[i].haveFile = !!contestArray[i].file;
     }
+    data.append('name', name.trim());
     data.append('number', number);
     data.append('expiry', expiry);
     data.append('cvc', cvc);
@@ -46,10 +48,12 @@ const Payment = (props) => {
   return (
     <div>
       <div className={styles.header}>
-        <img
-          src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
-          alt="blue-logo"
-        />
+        <Link to="/">
+          <img
+            src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
+            alt="blue-logo"
+          />
+        </Link>
       </div>
       <div className={styles.mainContainer}>
         <div className={styles.paymentContainer}>

@@ -56,7 +56,19 @@ class ContestForm extends React.Component {
   }
 
   render() {
-    const { isFetching, error } = this.props.dataForContest;
+    const {
+      initialValues,
+      handleSubmit,
+      formRef,
+      isEditContest,
+      dataForContest: {
+        isFetching,
+        error,
+        data,
+      },
+      contestType,
+    } = this.props;
+
     if (error) {
       return <TryAgain getData={this.getPreference} />;
     }
@@ -73,12 +85,12 @@ class ContestForm extends React.Component {
               focusOfWork: '',
               targetCustomer: '',
               file: '',
-              ...variableOptions[this.props.contestType],
-              ...this.props.initialValues,
+              ...variableOptions[contestType],
+              ...initialValues,
             }}
-            onSubmit={this.props.handleSubmit}
-            validationSchema={Schems.ContestSchem}
-            innerRef={this.props.formRef}
+            onSubmit={handleSubmit}
+            validationSchema={Schems.ContestSchem(contestType)}
+            innerRef={formRef}
             enableReinitialize
           >
             <Form>
@@ -105,7 +117,7 @@ class ContestForm extends React.Component {
                     warning: styles.warning,
                   }}
                   header="Describe industry associated with your venture"
-                  optionsArray={this.props.dataForContest.data.industry}
+                  optionsArray={data.industry}
                 />
               </div>
               <div className={styles.inputContainer}>
@@ -150,7 +162,7 @@ class ContestForm extends React.Component {
                 }}
                 type="file"
               />
-              {this.props.isEditContest ? (
+              {isEditContest ? (
                 <button type="submit" className={styles.changeData}>
                   Set Data
                 </button>
