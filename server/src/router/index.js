@@ -34,6 +34,7 @@ router.post(
   basicMiddlewares.onlyForCustomer,
   upload.uploadContestFiles,
   basicMiddlewares.parseBody,
+  validators.validatePaymentCredentials,
   validators.validateContestCreation,
   userController.payment,
 );

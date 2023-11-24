@@ -1,6 +1,7 @@
 const schems = require('../validationSchemes/schems');
 const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
+const { Bank } = require('../models');
 
 module.exports.validateRegistrationData = async (req, res, next) => {
   const validationResult = await schems.registrationSchem.isValid(req.body);
@@ -19,6 +20,25 @@ module.exports.validateLogin = async (req, res, next) => {
     return next(new BadRequestError('Invalid data for login'));
   }
 };
+
+module.exports.validatePaymentCredentials = async (req, res, next) => {
+  const bankRowByCardNumber = await Bank.findOne({
+    where: {cardNumber: req.body.number.replace(/ /g, '')}
+  });
+
+  const { name, cardNumber, expiry, cvc } = bankRowByCardNumber;
+
+  if (
+    req.body.name.toLowerCase() !== name.toLowerCase() || 
+    req.body.number.replace(/ /g, '') !== cardNumber || 
+    req.body.expiry !== expiry || 
+    req.body.cvc !== cvc
+  ) {
+    next(new BadRequestError());
+  }
+
+  next();
+}
 
 module.exports.validateContestCreation = (req, res, next) => {
   const promiseArray = [];

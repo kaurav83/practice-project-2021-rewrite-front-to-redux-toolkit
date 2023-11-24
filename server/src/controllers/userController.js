@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const CONSTANTS = require('../constants');
 const { sequelize, Sequelize, Offer, Rating, Contest, Bank } = require('../models');
 const NotUniqueEmail = require('../errors/NotUniqueEmail');
+const ServerError =require('../errors/ServerError');
 const moment = require('moment');
 const { v4: uuid } = require('uuid');
 const controller = require('../socketInit');
@@ -104,12 +105,6 @@ module.exports.changeMark = async (req, res, next) => {
 };
 
 module.exports.payment = async (req, res, next) => {
-  const bankRowByCardNumber = await Bank.findOne({
-    where: {cardNumber: req.body.number.replace(/ /g, '')}
-  });
-
-  const { name } = bankRowByCardNumber;
-
   let transaction;
   try {
     transaction = await sequelize.transaction();
@@ -117,7 +112,7 @@ module.exports.payment = async (req, res, next) => {
       balance: sequelize.literal(`
                 CASE
             WHEN "cardNumber"='${ req.body.number.replace(/ /g,
-    '') }' AND "cvc"='${ req.body.cvc }' AND "expiry"='${ req.body.expiry }' AND "name"='${req.body.name.toLowerCase() === name.toLowerCase() ? name : req.body.name}'
+    '') }' AND "cvc"='${ req.body.cvc }' AND "expiry"='${ req.body.expiry }'
                 THEN "balance"-${ req.body.price }
             WHEN "cardNumber"='${ CONSTANTS.SQUADHELP_BANK_NUMBER }' AND "cvc"='${ CONSTANTS.SQUADHELP_BANK_CVC }' AND "expiry"='${ CONSTANTS.SQUADHELP_BANK_EXPIRY }' AND "name"='${ CONSTANTS.SQUADHELP_BANK_NAME }'
                 THEN "balance"+${ req.body.price } END
@@ -144,14 +139,17 @@ module.exports.payment = async (req, res, next) => {
         orderId,
         createdAt: moment().format('YYYY-MM-DD HH:mm'),
         prize,
+        fileName: contest.file
       });
     });
+
     await Contest.bulkCreate(req.body.contests, transaction);
+
     transaction.commit();
     res.send();
   } catch (err) {
     transaction.rollback();
-    next(err);
+    next(new ServerError());
   }
 };
 

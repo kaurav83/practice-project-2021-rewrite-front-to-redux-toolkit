@@ -4,6 +4,7 @@ import styles from './Error.module.sass';
 const Error = props => {
   const getMessage = () => {
     const { status, data } = props;
+
     switch (status) {
       case 404:
         return data;
@@ -16,7 +17,7 @@ const Error = props => {
       case 406:
         return data;
       default:
-        return 'Server Error';
+        return data || 'Server Error';
     }
   };
 
