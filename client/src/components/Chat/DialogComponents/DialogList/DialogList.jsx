@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+
 import CONSTANTS from '../../../../constants';
 import {
   goToExpandedDialog,
@@ -8,6 +9,7 @@ import {
   changeChatBlock,
   changeShowAddChatToCatalogMenu,
 } from '../../../../store/slices/chatSlice';
+
 import DialogBox from '../DialogBox/DialogBox';
 import styles from './DialogList.module.sass';
 
@@ -35,9 +37,11 @@ const DialogList = (props) => {
 
   const getTimeStr = (time) => {
     const currentTime = moment();
+
     if (currentTime.isSame(time, 'day')) return moment(time).format('HH:mm');
     if (currentTime.isSame(time, 'week')) return moment(time).format('dddd');
     if (currentTime.isSame(time, 'year')) return moment(time).format('MM DD');
+
     return moment(time).format('MMMM DD, YYYY');
   };
 
@@ -51,6 +55,7 @@ const DialogList = (props) => {
       removeChat,
       interlocutor,
     } = props;
+
     preview.forEach((chatPreview, index) => {
       const dialogNode = (
         <DialogBox
@@ -70,17 +75,17 @@ const DialogList = (props) => {
           goToExpandedDialog={goToExpandedDialog}
         />
       );
+
       if (filterFunc && filterFunc(chatPreview, userId)) {
         arrayList.push(dialogNode);
       } else if (!filterFunc) {
         arrayList.push(dialogNode);
       }
     });
-    return arrayList.length ? (
-      arrayList
-    ) : (
-      <span className={styles.notFound}>Not found</span>
-    );
+
+    return arrayList.length
+      ? arrayList
+      : <span className={styles.notFound}>Not found</span>;
   };
 
   const renderChatPreview = () => {
@@ -92,7 +97,11 @@ const DialogList = (props) => {
     return renderPreview();
   };
 
-  return <div className={styles.previewContainer}>{renderChatPreview()}</div>;
+  return (
+    <div className={styles.previewContainer}>
+      {renderChatPreview()}
+    </div>
+  );
 };
 
 const mapStateToProps = (state) => state.chatStore;

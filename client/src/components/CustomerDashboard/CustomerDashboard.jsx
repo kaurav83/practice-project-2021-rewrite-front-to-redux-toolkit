@@ -1,134 +1,142 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+
 import {
   getContests,
   clearContestsList,
   setNewCustomerFilter,
 } from '../../store/slices/contestsSlice';
 import CONSTANTS from '../../constants';
+
 import ContestsContainer from '../ContestsContainer/ContestsContainer';
 import ContestBox from '../ContestBox/ContestBox';
-import styles from './CustomerDashboard.module.sass';
 import TryAgain from '../TryAgain/TryAgain';
+import styles from './CustomerDashboard.module.sass';
 
-class CustomerDashboard extends React.Component {
-  loadMore = startFrom => {
-    this.props.getContests({
+const CustomerDashboard = (props) => {
+  const {
+    error,
+    haveMore,
+    customerFilter,
+    clearContestsList,
+    newFilter,
+    isFetching,
+    history,
+  } = props;
+
+  const loadMore = startFrom => {
+    props.getContests({
       limit: 8,
       offset: startFrom,
-      contestStatus: this.props.customerFilter,
+      contestStatus: customerFilter,
     });
   };
 
-  componentDidMount () {
-    this.getContests();
-  }
-
-  getContests = () => {
-    this.props.getContests({
+  const getContests = () => {
+    props.getContests({
       limit: 8,
-      contestStatus: this.props.customerFilter,
+      contestStatus: customerFilter,
     });
   };
 
-  componentDidUpdate (prevProps, prevState, snapshot) {
-    if (this.props.customerFilter !== prevProps.customerFilter) {
-      this.getContests();
-    }
-  }
+  useEffect(() => {
+    return () => clearContestsList();
+  }, []);
 
-  goToExtended = contest_id => {
-    this.props.history.push(`/contest/${contest_id}`);
+  useEffect(() => {
+    getContests();
+  }, [customerFilter]);
+
+
+  const goToExtended = contest_id => {
+    history.push(`/contest/${contest_id}`);
   };
 
-  setContestList = () => {
+  const setContestList = () => {
     const array = [];
-    const { contests } = this.props;
+    const { contests } = props;
+
     for (let i = 0; i < contests.length; i++) {
       array.push(
         <ContestBox
           data={contests[i]}
           key={contests[i].id}
-          goToExtended={this.goToExtended}
+          goToExtended={goToExtended}
         />
       );
     }
+
     return array;
   };
 
-  componentWillUnmount () {
-    this.props.clearContestsList();
-  }
-
-  tryToGetContest = () => {
-    this.props.clearContestsList();
-    this.getContests();
+  const tryToGetContest = () => {
+    clearContestsList();
+    getContests();
   };
 
-  render () {
-    const { error, haveMore } = this.props;
-    const { customerFilter } = this.props;
-    return (
-      <div className={styles.mainContainer}>
-        <div className={styles.filterContainer}>
-          <div
-            onClick={() =>
-              this.props.newFilter(CONSTANTS.CONTEST_STATUS_ACTIVE)
-            }
-            className={classNames({
-              [styles.activeFilter]:
-                CONSTANTS.CONTEST_STATUS_ACTIVE === customerFilter,
-              [styles.filter]:
-                CONSTANTS.CONTEST_STATUS_ACTIVE !== customerFilter,
-            })}
-          >
-            Active Contests
-          </div>
-          <div
-            onClick={() =>
-              this.props.newFilter(CONSTANTS.CONTEST_STATUS_FINISHED)
-            }
-            className={classNames({
-              [styles.activeFilter]:
-                CONSTANTS.CONTEST_STATUS_FINISHED === customerFilter,
-              [styles.filter]:
-                CONSTANTS.CONTEST_STATUS_FINISHED !== customerFilter,
-            })}
-          >
-            Completed contests
-          </div>
-          <div
-            onClick={() =>
-              this.props.newFilter(CONSTANTS.CONTEST_STATUS_PENDING)
-            }
-            className={classNames({
-              [styles.activeFilter]:
-                CONSTANTS.CONTEST_STATUS_PENDING === customerFilter,
-              [styles.filter]:
-                CONSTANTS.CONTEST_STATUS_PENDING !== customerFilter,
-            })}
-          >
-            Inactive contests
-          </div>
+  return (
+    <div className={styles.mainContainer}>
+      <div className={styles.filterContainer}>
+        <div
+          onClick={() =>
+            newFilter(CONSTANTS.CONTEST_STATUS_ACTIVE)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.CONTEST_STATUS_ACTIVE === customerFilter,
+            [styles.filter]:
+              CONSTANTS.CONTEST_STATUS_ACTIVE !== customerFilter,
+          })}
+        >
+          Active Contests
         </div>
-        <div className={styles.contestsContainer}>
-          {error ? (
-            <TryAgain getData={this.tryToGetContest()} />
-          ) : (
-            <ContestsContainer
-              isFetching={this.props.isFetching}
-              loadMore={this.loadMore}
-              history={this.props.history}
-              haveMore={haveMore}
-            >
-              {this.setContestList()}
-            </ContestsContainer>
-          )}
+
+        <div
+          onClick={() =>
+            newFilter(CONSTANTS.CONTEST_STATUS_FINISHED)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.CONTEST_STATUS_FINISHED === customerFilter,
+            [styles.filter]:
+              CONSTANTS.CONTEST_STATUS_FINISHED !== customerFilter,
+          })}
+        >
+          Completed contests
+        </div>
+
+        <div
+          onClick={() =>
+            newFilter(CONSTANTS.CONTEST_STATUS_PENDING)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.CONTEST_STATUS_PENDING === customerFilter,
+            [styles.filter]:
+              CONSTANTS.CONTEST_STATUS_PENDING !== customerFilter,
+          })}
+        >
+          Inactive contests
         </div>
       </div>
-    );
-  }
+
+      <div className={styles.contestsContainer}>
+        {error
+          ? <TryAgain getData={tryToGetContest()} />
+          : (
+            <ContestsContainer
+              isFetching={isFetching}
+              loadMore={loadMore}
+              history={history}
+              haveMore={haveMore}
+            >
+              {setContestList()}
+            </ContestsContainer>
+          )}
+      </div>
+    </div>
+  );
 }
 
 const mapStateToProps = state => state.contestsList;

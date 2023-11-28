@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import styles from './DialogBox.module.sass';
+
 import CONSTANTS from '../../../../constants';
+
+import styles from './DialogBox.module.sass';
 
 const DialogBox = props => {
   const {
@@ -15,6 +17,7 @@ const DialogBox = props => {
     chatMode,
     interlocutor,
   } = props;
+
   const {
     favoriteList,
     participants,
@@ -23,8 +26,10 @@ const DialogBox = props => {
     text,
     createAt,
   } = chatPreview;
+
   const isFavorite = favoriteList[participants.indexOf(userId)];
   const isBlocked = blackList[participants.indexOf(userId)];
+
   return (
     <div
       className={styles.previewChatBox}
@@ -40,23 +45,30 @@ const DialogBox = props => {
         })
       }
     >
-      <img
-        src={
-          interlocutor.avatar === 'anon.png'
-            ? CONSTANTS.ANONYM_IMAGE_PATH
-            : `${CONSTANTS.publicURL}${interlocutor.avatar}`
-        }
-        alt='user'
-      />
+      {interlocutor && (
+        <img
+          src={
+            interlocutor.avatar === 'anon.png'
+              ? CONSTANTS.ANONYM_IMAGE_PATH
+              : `${CONSTANTS.publicURL}${interlocutor.avatar}`
+          }
+          alt='user'
+        />
+      )}
+
       <div className={styles.infoContainer}>
         <div className={styles.interlocutorInfo}>
-          <span className={styles.interlocutorName}>
-            {interlocutor.firstName}
-          </span>
+          {interlocutor && (
+            <span className={styles.interlocutorName}>
+              {interlocutor.firstName}
+            </span>
+          )}
+
           <span className={styles.interlocutorMessage}>{text}</span>
         </div>
         <div className={styles.buttonsContainer}>
           <span className={styles.time}>{getTimeStr(createAt)}</span>
+
           <i
             onClick={event =>
               changeFavorite(
@@ -72,6 +84,7 @@ const DialogBox = props => {
               'fas fa-heart': isFavorite,
             })}
           />
+
           <i
             onClick={event =>
               changeBlackList(
@@ -87,6 +100,7 @@ const DialogBox = props => {
               'fas fa-unlock': isBlocked,
             })}
           />
+
           <i
             onClick={event => catalogOperation(event, _id)}
             className={classNames({

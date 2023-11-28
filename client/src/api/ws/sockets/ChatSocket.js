@@ -1,11 +1,8 @@
-import isEqual from 'lodash/isEqual';
 import WebSocket from './WebSocket';
 import CONTANTS from '../../../constants';
 import {
-  addMessage,
   changeBlockStatusInStore,
 } from '../../../store/slices/chatSlice';
-import _ from 'lodash';
 
 class ChatSocket extends WebSocket {
   constructor (dispatch, getState, room) {
@@ -13,19 +10,12 @@ class ChatSocket extends WebSocket {
   }
 
   anotherSubscribes = () => {
-    this.onNewMessage();
     this.onChangeBlockStatus();
   };
 
   onChangeBlockStatus = () => {
     this.socket.on(CONTANTS.CHANGE_BLOCK_STATUS, data => {
       this.dispatch(changeBlockStatusInStore(data.message));
-    });
-  };
-
-  onNewMessage = () => {
-    this.socket.on('newMessage', data => {
-      this.dispatch(addMessage(data.message));
     });
   };
 

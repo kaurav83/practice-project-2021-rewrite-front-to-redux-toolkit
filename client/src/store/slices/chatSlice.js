@@ -320,25 +320,6 @@ const reducers = {
     state.messagesPreview = messagesPreview;
   },
 
-  addMessage: (state, { payload }) => {
-    const { message, preview } = payload;
-    const { messagesPreview } = state;
-    let isNew = true;
-    messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, message.participants)) {
-        preview.text = message.body;
-        preview.sender = message.sender;
-        preview.createAt = message.createdAt;
-        isNew = false;
-      }
-    });
-    if (isNew) {
-      messagesPreview.push(preview);
-    }
-    state.messagesPreview = messagesPreview;
-    state.messages = [...state.messages, payload.message];
-  },
-
   backToDialogList: state => {
     state.isExpanded = false;
   },
