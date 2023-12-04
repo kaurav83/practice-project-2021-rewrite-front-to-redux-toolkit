@@ -1,8 +1,9 @@
 import React from 'react';
 import Flickity from 'react-flickity-component';
-import style from './SlideBar.module.sass';
-import carouselConstants from '../../carouselConstants';
+
+import { carouselConstants } from '../../carouselConstants';
 import './flickity.css';
+import style from './SlideBar.module.sass';
 
 const SliderBar = props => {
   const options = {
@@ -24,6 +25,8 @@ const SliderBar = props => {
         return style.exampleCarousel;
       case carouselConstants.FEEDBACK_SLIDER:
         return style.feedbackCarousel;
+      default:
+        return style.mainCarousel;
     }
   };
 
@@ -57,8 +60,18 @@ const SliderBar = props => {
           </div>
         ));
       }
+      default:
+        return Object.keys(props.images).map((key, index) => (
+          <img
+            src={props.images[key]}
+            alt='slide'
+            key={index}
+            className={style['carousel-cell']}
+          />
+        ));
     }
   };
+
   return (
     <Flickity className={getStyleName()} elementType='div' options={options}>
       {renderSlides()}

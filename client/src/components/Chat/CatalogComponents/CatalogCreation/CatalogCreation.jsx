@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
-import CONSTANTS from '../../../../constants';
+import { CONSTANTS } from '../../../../constants';
 import {
   changeTypeOfChatAdding,
   changeShowAddChatToCatalogMenu,
@@ -13,13 +13,12 @@ import AddToCatalog from '../AddToCatalog/AddToCatalog';
 import CreateCatalog from '../CreateCatalog/CreateCatalog';
 import styles from './CatalogCreation.module.sass';
 
-const CatalogCreation = (props) => {
+const CatalogCreation = () => {
+  const dispatch = useDispatch();
   const {
-    changeTypeOfChatAdding,
     catalogCreationMode,
-    changeShowAddChatToCatalogMenu,
-    isFetching,
-  } = props;
+    isFetching
+  } = useSelector((state) => state.chatStore);
 
   const {
     ADD_CHAT_TO_OLD_CATALOG,
@@ -27,8 +26,8 @@ const CatalogCreation = (props) => {
   } = CONSTANTS;
 
   useEffect(() => {
-    props.getCatalogList();
-  }, []);
+    dispatch(getCatalogList());
+  }, [dispatch]);
 
   return (
     <>
@@ -36,11 +35,11 @@ const CatalogCreation = (props) => {
         <div className={styles.catalogCreationContainer}>
           <i
             className="far fa-times-circle"
-            onClick={() => changeShowAddChatToCatalogMenu()}
+            onClick={() => dispatch(changeShowAddChatToCatalogMenu())}
           />
           <div className={styles.buttonsContainer}>
             <span
-              onClick={() => changeTypeOfChatAdding(ADD_CHAT_TO_OLD_CATALOG)}
+              onClick={() => dispatch(changeTypeOfChatAdding(ADD_CHAT_TO_OLD_CATALOG))}
               className={classNames({
                 [styles.active]:
                   catalogCreationMode === ADD_CHAT_TO_OLD_CATALOG,
@@ -50,7 +49,7 @@ const CatalogCreation = (props) => {
             </span>
             <span
               onClick={() =>
-                changeTypeOfChatAdding(CREATE_NEW_CATALOG_AND_ADD_CHAT)
+                dispatch(changeTypeOfChatAdding(CREATE_NEW_CATALOG_AND_ADD_CHAT))
               }
               className={classNames({
                 [styles.active]:
@@ -70,13 +69,4 @@ const CatalogCreation = (props) => {
   );
 }
 
-const mapStateToProps = (state) => state.chatStore;
-
-const mapDispatchToProps = (dispatch) => ({
-  changeTypeOfChatAdding: (data) => dispatch(changeTypeOfChatAdding(data)),
-  changeShowAddChatToCatalogMenu: () =>
-    dispatch(changeShowAddChatToCatalogMenu()),
-  getCatalogList: () => dispatch(getCatalogList()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CatalogCreation);
+export default CatalogCreation;

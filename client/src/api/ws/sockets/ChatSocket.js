@@ -1,20 +1,16 @@
 import WebSocket from './WebSocket';
-import CONTANTS from '../../../constants';
+import { CONSTANTS } from '../../../constants';
 import {
   changeBlockStatusInStore,
 } from '../../../store/slices/chatSlice';
 
 class ChatSocket extends WebSocket {
-  constructor (dispatch, getState, room) {
-    super(dispatch, getState, room);
-  }
-
   anotherSubscribes = () => {
     this.onChangeBlockStatus();
   };
 
   onChangeBlockStatus = () => {
-    this.socket.on(CONTANTS.CHANGE_BLOCK_STATUS, data => {
+    this.socket.on(CONSTANTS.CHANGE_BLOCK_STATUS, data => {
       this.dispatch(changeBlockStatusInStore(data.message));
     });
   };

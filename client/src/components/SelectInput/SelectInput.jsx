@@ -16,6 +16,7 @@ const SelectInput = ({
 
   const getOptionsArray = () => {
     const array = [];
+
     for (let i = 0; optionsArray && i < optionsArray.length; i++) {
       let option;
       if (valueArray) {
@@ -27,8 +28,10 @@ const SelectInput = ({
       } else {
         option = <option key={i}>{optionsArray[i]}</option>;
       }
+
       array.push(option);
     }
+
     return array;
   };
 
@@ -36,11 +39,12 @@ const SelectInput = ({
     if (!initialValue && optionsArray) {
       setFieldValue(field.name, valueArray ? valueArray[0] : optionsArray[0]);
     }
-  }, []);
+  }, [field.name, initialValue, optionsArray, setFieldValue, valueArray]);
 
   return (
     <div className={classes.inputContainer}>
       <span className={classes.inputHeader}>{header}</span>
+
       <select {...field} className={classes.selectInput}>
         {getOptionsArray()}
       </select>
@@ -65,6 +69,7 @@ const SelectInputWrapper = ({
           optionsArray={optionsArray}
           valueArray={valueArray}
         />
+
         <ErrorMessage
           name={fieldProps.field.name}
           component='span'

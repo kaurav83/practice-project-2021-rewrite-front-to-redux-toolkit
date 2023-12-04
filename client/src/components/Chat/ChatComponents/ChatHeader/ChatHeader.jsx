@@ -1,48 +1,56 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+
 import {
   backToDialogList,
   changeChatFavorite,
   changeChatBlock,
 } from '../../../../store/slices/chatSlice';
+import { CONSTANTS } from '../../../../constants';
+
 import styles from './ChatHeader.module.sass';
-import CONSTANTS from '../../../../constants';
 
 const ChatHeader = (props) => {
+  const dispatch = useDispatch();
+  const { interlocutor, chatData } = useSelector((state) => state.chatStore);
+  const { avatar, firstName } = interlocutor;
+  const { userId } = props;
+
   const changeFavorite = (data, event) => {
-    props.changeChatFavorite(data);
+    dispatch(changeChatFavorite(data));
     event.stopPropagation();
   };
 
   const changeBlackList = (data, event) => {
-    props.changeChatBlock(data);
+    dispatch(changeChatBlock(data));
     event.stopPropagation();
   };
 
   const isFavorite = (chatData, userId) => {
     const { favoriteList, participants } = chatData;
+
     return favoriteList[participants.indexOf(userId)];
   };
 
   const isBlocked = (chatData, userId) => {
     const { participants, blackList } = chatData;
+
     return blackList[participants.indexOf(userId)];
   };
 
-  const { avatar, firstName } = props.interlocutor;
-  const { backToDialogList, chatData, userId } = props;
   return (
     <div className={styles.chatHeader}>
       <div
         className={styles.buttonContainer}
-        onClick={() => backToDialogList()}
+        onClick={() => dispatch(backToDialogList())}
       >
         <img
           src={`${CONSTANTS.STATIC_IMAGES_PATH}arrow-left-thick.png`}
           alt="back"
         />
       </div>
+
       <div className={styles.infoContainer}>
         <div>
           <img
@@ -53,8 +61,10 @@ const ChatHeader = (props) => {
             }
             alt="user"
           />
+
           <span>{firstName}</span>
         </div>
+
         {chatData && (
           <div>
             <i
@@ -72,6 +82,7 @@ const ChatHeader = (props) => {
                 'fas fa-heart': isFavorite(chatData, userId),
               })}
             />
+
             <i
               onClick={(event) =>
                 changeBlackList(
@@ -94,15 +105,4 @@ const ChatHeader = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { interlocutor, chatData } = state.chatStore;
-  return { interlocutor, chatData };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  backToDialogList: () => dispatch(backToDialogList()),
-  changeChatFavorite: (data) => dispatch(changeChatFavorite(data)),
-  changeChatBlock: (data) => dispatch(changeChatBlock(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChatHeader);
+export default ChatHeader;

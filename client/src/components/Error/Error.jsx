@@ -1,7 +1,11 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
 import styles from './Error.module.sass';
 
 const Error = props => {
+  const dispatch = useDispatch();
+
   const getMessage = () => {
     const { status, data } = props;
 
@@ -25,7 +29,7 @@ const Error = props => {
   return (
     <div className={styles.errorContainer}>
       <span>{getMessage()}</span>
-      <i className='far fa-times-circle' onClick={() => clearError()} />
+      <i className='far fa-times-circle' onClick={() => dispatch(clearError())} />
     </div>
   );
 };

@@ -1,19 +1,30 @@
 import React from 'react';
 import { Form, Formik } from 'formik';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+
 import { clearUserError } from '../../store/slices/userSlice';
-import styles from './UpdateUserInfoForm.module.sass';
+import { Schems } from '../../utils/validators/validationSchems';
+
 import ImageUpload from '../InputComponents/ImageUpload/ImageUpload';
 import FormInput from '../FormInput/FormInput';
-import Schems from '../../utils/validators/validationSchems';
 import Error from '../Error/Error';
+import styles from './UpdateUserInfoForm.module.sass';
 
-const UpdateUserInfoForm = props => {
-  const { onSubmit, submitting, error, clearUserError } = props;
+const UpdateUserInfoForm = ({ onSubmit }) => {
+  const {
+    data,
+    error
+  } = useSelector((state) => state.userStore);
+  const initialValues = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    displayName: data.displayName,
+  };
+
   return (
     <Formik
       onSubmit={onSubmit}
-      initialValues={props.initialValues}
+      initialValues={initialValues}
       validationSchema={Schems.UpdateUserSchema}
     >
       <Form className={styles.updateContainer}>
@@ -24,8 +35,10 @@ const UpdateUserInfoForm = props => {
             clearError={clearUserError}
           />
         )}
+        
         <div className={styles.container}>
           <span className={styles.label}>First Name</span>
+
           <FormInput
             name='firstName'
             type='text'
@@ -38,8 +51,10 @@ const UpdateUserInfoForm = props => {
             }}
           />
         </div>
+
         <div className={styles.container}>
           <span className={styles.label}>Last Name</span>
+
           <FormInput
             name='lastName'
             type='text'
@@ -52,8 +67,10 @@ const UpdateUserInfoForm = props => {
             }}
           />
         </div>
+
         <div className={styles.container}>
           <span className={styles.label}>Display Name</span>
+
           <FormInput
             name='displayName'
             type='text'
@@ -66,6 +83,7 @@ const UpdateUserInfoForm = props => {
             }}
           />
         </div>
+
         <ImageUpload
           name='file'
           classes={{
@@ -74,7 +92,8 @@ const UpdateUserInfoForm = props => {
             imgStyle: styles.imgStyle,
           }}
         />
-        <button type='submit' disabled={submitting}>
+
+        <button type='submit'>
           Submit
         </button>
       </Form>
@@ -82,20 +101,4 @@ const UpdateUserInfoForm = props => {
   );
 };
 
-const mapStateToProps = state => {
-  const { data, error } = state.userStore;
-  return {
-    error,
-    initialValues: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      displayName: data.displayName,
-    },
-  };
-};
-
-const mapDispatchToProps = dispatch => ({
-  clearUserError: () => dispatch(clearUserError()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateUserInfoForm);
+export default UpdateUserInfoForm;

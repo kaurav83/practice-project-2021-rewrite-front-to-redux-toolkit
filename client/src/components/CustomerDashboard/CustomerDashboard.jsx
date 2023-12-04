@@ -1,52 +1,57 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
+import React, { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   getContests,
   clearContestsList,
-  setNewCustomerFilter,
 } from '../../store/slices/contestsSlice';
-import CONSTANTS from '../../constants';
+import { CONSTANTS } from '../../constants';
 
 import ContestsContainer from '../ContestsContainer/ContestsContainer';
 import ContestBox from '../ContestBox/ContestBox';
 import TryAgain from '../TryAgain/TryAgain';
+import CustomerDashboardTabset from './CustomerDashboardTabset';
 import styles from './CustomerDashboard.module.sass';
 
-const CustomerDashboard = (props) => {
+const CustomerDashboard = ({ history }) => {
   const {
     error,
     haveMore,
     customerFilter,
-    clearContestsList,
-    newFilter,
     isFetching,
-    history,
-  } = props;
+    contests,
+  } = useSelector((state) => state.contestsList);
+
+  const dispatch = useDispatch();
 
   const loadMore = startFrom => {
-    props.getContests({
-      limit: 8,
-      offset: startFrom,
-      contestStatus: customerFilter,
-    });
+    dispatch(getContests({
+      requestData: {
+        limit: 8,
+        offset: startFrom,
+        contestStatus: customerFilter,
+      },
+      role: CONSTANTS.CUSTOMER
+    }));
   };
 
-  const getContests = () => {
-    props.getContests({
-      limit: 8,
-      contestStatus: customerFilter,
-    });
-  };
+  const getContestsCallback = useCallback(() => {
+    dispatch(getContests({
+      requestData: {
+        limit: 8,
+        contestStatus: customerFilter,
+      },
+      role: CONSTANTS.CUSTOMER
+    }));
+  }, [dispatch, customerFilter]);
 
   useEffect(() => {
-    return () => clearContestsList();
-  }, []);
+    return () => dispatch(clearContestsList());
+  }, [dispatch]);
 
   useEffect(() => {
-    getContests();
-  }, [customerFilter]);
+    getContestsCallback();
+  }, [customerFilter, getContestsCallback]);
 
 
   const goToExtended = contest_id => {
@@ -55,7 +60,6 @@ const CustomerDashboard = (props) => {
 
   const setContestList = () => {
     const array = [];
-    const { contests } = props;
 
     for (let i = 0; i < contests.length; i++) {
       array.push(
@@ -71,55 +75,15 @@ const CustomerDashboard = (props) => {
   };
 
   const tryToGetContest = () => {
-    clearContestsList();
-    getContests();
+    dispatch(clearContestsList());
+    getContestsCallback();
   };
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.filterContainer}>
-        <div
-          onClick={() =>
-            newFilter(CONSTANTS.CONTEST_STATUS_ACTIVE)
-          }
-          className={classNames({
-            [styles.activeFilter]:
-              CONSTANTS.CONTEST_STATUS_ACTIVE === customerFilter,
-            [styles.filter]:
-              CONSTANTS.CONTEST_STATUS_ACTIVE !== customerFilter,
-          })}
-        >
-          Active Contests
-        </div>
-
-        <div
-          onClick={() =>
-            newFilter(CONSTANTS.CONTEST_STATUS_FINISHED)
-          }
-          className={classNames({
-            [styles.activeFilter]:
-              CONSTANTS.CONTEST_STATUS_FINISHED === customerFilter,
-            [styles.filter]:
-              CONSTANTS.CONTEST_STATUS_FINISHED !== customerFilter,
-          })}
-        >
-          Completed contests
-        </div>
-
-        <div
-          onClick={() =>
-            newFilter(CONSTANTS.CONTEST_STATUS_PENDING)
-          }
-          className={classNames({
-            [styles.activeFilter]:
-              CONSTANTS.CONTEST_STATUS_PENDING === customerFilter,
-            [styles.filter]:
-              CONSTANTS.CONTEST_STATUS_PENDING !== customerFilter,
-          })}
-        >
-          Inactive contests
-        </div>
-      </div>
+      <CustomerDashboardTabset
+        customerFilter={customerFilter}
+      />
 
       <div className={styles.contestsContainer}>
         {error
@@ -139,13 +103,4 @@ const CustomerDashboard = (props) => {
   );
 }
 
-const mapStateToProps = state => state.contestsList;
-
-const mapDispatchToProps = dispatch => ({
-  getContests: data =>
-    dispatch(getContests({ requestData: data, role: CONSTANTS.CUSTOMER })),
-  clearContestsList: () => dispatch(clearContestsList()),
-  newFilter: filter => dispatch(setNewCustomerFilter(filter)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerDashboard);
+export default CustomerDashboard;

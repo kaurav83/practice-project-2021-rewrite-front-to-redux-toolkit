@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
 import {
   changeShowModeCatalog,
@@ -8,39 +8,48 @@ import {
 } from '../../../../store/slices/chatSlice';
 import styles from './CatalogHeader.module.sass';
 import FormInput from '../../../FormInput/FormInput';
-import Schems from '../../../../utils/validators/validationSchems';
+import { Schems } from '../../../../utils/validators/validationSchems';
 
 const CatalogListHeader = (props) => {
-  const changeCatalogName = (values) => {
-    const { changeCatalogName, _id } = props;
-    changeCatalogName({ catalogName: values.catalogName, catalogId: _id });
-  };
+  const dispatch = useDispatch();
   const {
-    catalogName,
-    changeShowModeCatalog,
-    changeRenameCatalogMode,
     isRenameCatalog,
-  } = props;
+    currentCatalog: {
+      catalogName,
+      _id,
+    },
+  } = useSelector((state) => state.chatStore);
+  const initialValues = {catalogName};
+
+  const changeCatalogNameCallback = useCallback((values) => {
+    dispatch(changeCatalogName({
+      catalogName: values.catalogName,
+      catalogId: _id
+    }));
+  }, [dispatch, _id]);
+
   return (
     <div className={styles.headerContainer}>
       <i
         className="fas fa-long-arrow-alt-left"
-        onClick={() => changeShowModeCatalog()}
+        onClick={() => dispatch(changeShowModeCatalog())}
       />
+
       {!isRenameCatalog && (
         <div className={styles.infoContainer}>
           <span>{catalogName}</span>
+
           <i
             className="fas fa-edit"
-            onClick={() => changeRenameCatalogMode()}
+            onClick={() => dispatch(changeRenameCatalogMode())}
           />
         </div>
       )}
       {isRenameCatalog && (
         <div className={styles.changeContainer}>
           <Formik
-            onSubmit={changeCatalogName}
-            initialValues={props.initialValues}
+            onSubmit={changeCatalogNameCallback}
+            initialValues={initialValues}
             validationSchema={Schems.CatalogSchema}
           >
             <Form>
@@ -55,6 +64,7 @@ const CatalogListHeader = (props) => {
                 type="text"
                 label="Catalog Name"
               />
+
               <button type="submit">Change</button>
             </Form>
           </Formik>
@@ -64,23 +74,4 @@ const CatalogListHeader = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { isRenameCatalog } = state.chatStore;
-  const { catalogName, _id } = state.chatStore.currentCatalog;
-  return {
-    _id,
-    catalogName,
-    isRenameCatalog,
-    initialValues: {
-      catalogName,
-    },
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  changeShowModeCatalog: () => dispatch(changeShowModeCatalog()),
-  changeRenameCatalogMode: () => dispatch(changeRenameCatalogMode()),
-  changeCatalogName: (data) => dispatch(changeCatalogName(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CatalogListHeader);
+export default CatalogListHeader;

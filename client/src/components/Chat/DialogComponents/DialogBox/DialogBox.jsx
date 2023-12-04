@@ -1,11 +1,14 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
-import CONSTANTS from '../../../../constants';
+import { CONSTANTS } from '../../../../constants';
+import { goToExpandedDialog } from '../../../../store/slices/chatSlice';
 
 import styles from './DialogBox.module.sass';
 
 const DialogBox = props => {
+  const dispatch = useDispatch();
   const {
     chatPreview,
     userId,
@@ -13,7 +16,6 @@ const DialogBox = props => {
     changeFavorite,
     changeBlackList,
     catalogOperation,
-    goToExpandedDialog,
     chatMode,
     interlocutor,
   } = props;
@@ -34,7 +36,7 @@ const DialogBox = props => {
     <div
       className={styles.previewChatBox}
       onClick={() =>
-        goToExpandedDialog({
+        dispatch(goToExpandedDialog({
           interlocutor,
           conversationData: {
             participants,
@@ -42,7 +44,7 @@ const DialogBox = props => {
             blackList,
             favoriteList,
           },
-        })
+        }))
       }
     >
       {interlocutor && (

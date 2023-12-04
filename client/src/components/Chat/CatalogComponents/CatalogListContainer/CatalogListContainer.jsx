@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   getCatalogList,
   removeChatFromCatalog,
@@ -7,25 +7,26 @@ import {
 import CatalogList from '../CatalogList/CatalogList';
 import DialogList from '../../DialogComponents/DialogList/DialogList';
 
-const CatalogListContainer = (props) => {
+const CatalogListContainer = () => {
+  const dispatch = useDispatch();
+  const { id } = useSelector((state) => state.userStore.data);
   const {
     catalogList,
     isShowChatsInCatalog,
     currentCatalog,
     messagesPreview,
-  } = props.chatStore;
-  const { id } = props.userStore.data;
+  } = useSelector((state) => state.chatStore);
 
   useEffect(() => {
-    props.getCatalogList();
-  }, []);
+    dispatch(getCatalogList());
+  }, [dispatch]);
 
-  const removeChatFromCatalog = (event, chatId) => {
+  const removeChatFromCatalogCallback = useCallback((event, chatId) => {
     const { _id } = currentCatalog;
 
-    props.removeChatFromCatalog({ chatId, catalogId: _id });
+    dispatch(removeChatFromCatalog({ chatId, catalogId: _id }));
     event.stopPropagation();
-  };
+  }, [currentCatalog, dispatch]);
 
   const getDialogsPreview = () => {
     const { chats } = currentCatalog;
@@ -47,7 +48,7 @@ const CatalogListContainer = (props) => {
         <DialogList
           userId={id}
           preview={getDialogsPreview()}
-          removeChat={removeChatFromCatalog}
+          removeChat={removeChatFromCatalogCallback}
         />
       ) : (
         <CatalogList catalogList={catalogList} />
@@ -56,17 +57,4 @@ const CatalogListContainer = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { chatStore, userStore } = state;
-  return { chatStore, userStore };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  getCatalogList: (data) => dispatch(getCatalogList(data)),
-  removeChatFromCatalog: (data) => dispatch(removeChatFromCatalog(data)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CatalogListContainer);
+export default CatalogListContainer;

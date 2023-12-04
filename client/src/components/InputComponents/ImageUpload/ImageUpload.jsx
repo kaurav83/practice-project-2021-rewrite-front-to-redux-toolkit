@@ -4,7 +4,7 @@ import { useField } from 'formik';
 
 const ImageUpload = props => {
   const { uploadContainer, inputContainer, imgStyle } = props.classes;
-
+  // eslint-disable-next-line
   const [{ value, ...restFields }, meta, helpers] = useField(props.name);
 
   const onChange = e => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import className from 'classnames';
 
@@ -12,30 +12,37 @@ import ChatHeader from '../../ChatComponents/ChatHeader/ChatHeader';
 import ChatInput from '../../ChatComponents/ChatInut/ChatInput';
 import styles from './Dialog.module.sass';
 
-const Dialog = (props) => {
-  const { chatData, userId } = props;
+const Dialog = ({ userId }) => {
+  const dispatch = useDispatch();
+  const {
+    chatData,
+    interlocutor,
+    messages,
+  } = useSelector((state) => state.chatStore);
 
   const messagesEnd = useRef();
 
   useEffect(() => {
-    return () => props.clearMessageList();
-  }, []);
+    return () => dispatch(clearMessageList());
+  }, [dispatch]);
 
   useEffect(() => {
     scrollToBottom();
+    // eslint-disable-next-line
   }, [messagesEnd.current]);
 
   useEffect(() => {
-    props.getDialog({ interlocutorId: props.interlocutor.id });
-  }, [props.interlocutor.id]);
+    dispatch(
+      getDialogMessages({ interlocutorId: interlocutor?.id })
+    );
+  }, [interlocutor?.id, dispatch]);
 
   const scrollToBottom = () => {
-    messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
+    messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const renderMainDialog = () => {
     const messagesArray = [];
-    const { messages, userId } = props;
     let currentTime = moment();
 
     messages.forEach((message, i) => {
@@ -71,7 +78,6 @@ const Dialog = (props) => {
   };
 
   const blockMessage = () => {
-    const { userId, chatData } = props;
     const { blackList, participants } = chatData;
     const userIndex = participants.indexOf(userId);
     let message;
@@ -91,7 +97,7 @@ const Dialog = (props) => {
 
   return (
     <>
-      <ChatHeader userId={userId} />
+      {interlocutor && <ChatHeader userId={userId} />}
 
       {renderMainDialog()}
 
@@ -105,11 +111,4 @@ const Dialog = (props) => {
   );
 }
 
-const mapStateToProps = (state) => state.chatStore;
-
-const mapDispatchToProps = (dispatch) => ({
-  getDialog: (data) => dispatch(getDialogMessages(data)),
-  clearMessageList: () => dispatch(clearMessageList()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dialog);
+export default Dialog;

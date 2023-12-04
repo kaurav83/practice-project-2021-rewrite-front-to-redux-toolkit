@@ -5,7 +5,7 @@ import Logo from '../../components/Logo';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import styles from './RegistrationPage.module.sass';
 import { clearAuthError } from '../../store/slices/authSlice';
-import CONSTANTS from '../../constants';
+import { CONSTANTS } from '../../constants';
 
 const RegistrationPage = props => {
   props.clearError();

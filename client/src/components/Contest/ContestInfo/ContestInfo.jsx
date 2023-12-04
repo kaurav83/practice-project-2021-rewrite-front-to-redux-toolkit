@@ -1,12 +1,17 @@
 import React from 'react';
-import styles from '../../Brief/Brief.module.sass';
-import CONSTANTS from '../../../constants';
+import { useDispatch } from 'react-redux';
+
+import { CONSTANTS } from '../../../constants';
+import { changeEditContest } from '../../../store/slices/contestByIdSlice';
+
 import LogoContestSpecialInfo from './LogoContestSpecialInfo';
 import NameContestSpecialInfo from './NameContestSpecialInfo';
 import TaglineContestSpecialInfo from './TaglineContestSpecialInfo';
+import styles from '../../Brief/Brief.module.sass';
 
 const ContestInfo = props => {
-  const { changeEditContest, userId, contestData, role, goChat } = props;
+  const dispatch = useDispatch();
+  const { userId, contestData, role, goChat } = props;
   const {
     typeOfTagline,
     brandStyle,
@@ -22,6 +27,7 @@ const ContestInfo = props => {
     User,
     status,
   } = contestData;
+
   return (
     <div className={styles.mainContestInfoContainer}>
       <div className={styles.infoContainer}>
@@ -32,7 +38,7 @@ const ContestInfo = props => {
           </div>
           {User.id === userId && status !== CONSTANTS.CONTEST_STATUS_FINISHED && (
             <div
-              onClick={() => changeEditContest(true)}
+              onClick={() => dispatch(changeEditContest(true))}
               className={styles.editBtn}
             >
               Edit

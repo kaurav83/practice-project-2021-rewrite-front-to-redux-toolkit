@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import CONSTANTS from './constants';
+import { CONSTANTS } from './constants';
 import browserHistory from './browserHistory';
 
 import LoginPage from './pages/LoginPage/LoginPage';

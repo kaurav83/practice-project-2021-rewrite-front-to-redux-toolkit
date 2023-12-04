@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import styles from './ContestContainer.module.sass';
 import Spinner from '../Spinner/Spinner';
@@ -9,10 +9,9 @@ const ContestsContainer = (props) => {
     loadMore,
     children,
     isFetching,
-    history,
   } = props;
 
-  const scrollHandler = () => {
+  const scrollHandler = useCallback(() => {
     if (
       window.innerHeight + document.documentElement.scrollTop ===
       document.documentElement.offsetHeight
@@ -21,15 +20,15 @@ const ContestsContainer = (props) => {
         loadMore(children.length);
       }
     }
-  };
+  }, [children, haveMore, loadMore]);
 
   useEffect(() => {
     window.addEventListener('scroll', scrollHandler);
 
     return () => window.removeEventListener('scroll', scrollHandler);
-  }, [isFetching]);
+  }, [isFetching, scrollHandler]);
 
-  if (!isFetching && children.length === 0) {
+  if (!isFetching && children && children.length === 0) {
     return <div className={styles.notFound}>Nothing not found</div>;
   }
 

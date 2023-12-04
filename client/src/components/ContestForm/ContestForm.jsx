@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Form, Formik } from 'formik';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import CONSTANTS from '../../constants';
+import { CONSTANTS } from '../../constants';
 import { getDataForContest } from '../../store/slices/dataForContestSlice';
-import Schems from '../../utils/validators/validationSchems';
+import { Schems } from '../../utils/validators/validationSchems';
 
 import Spinner from '../Spinner/Spinner';
 import FormInput from '../FormInput/FormInput';
@@ -33,42 +33,50 @@ const variableOptions = {
 
 const ContestForm = (props) => {
   const {
-    initialValues,
     handleSubmit,
     formRef,
-    isEditContest,
-    dataForContest: {
-      isFetching,
-      error,
-      data,
-    },
+    defaultData,
     contestType,
   } = props;
 
-  const getPreference = () => {
-    const { contestType } = props;
+  const { isEditContest } = useSelector((state) => state.contestByIdStore);
+  const {
+    isFetching,
+    error,
+    data,
+  } = useSelector((state) => state.dataForContest);
+  const dispatch = useDispatch();
+
+  const getPreference = useCallback(() => {
     switch (contestType) {
       case CONSTANTS.NAME_CONTEST: {
-        props.getData({
+        dispatch(getDataForContest({
           characteristic1: 'nameStyle',
           characteristic2: 'typeOfName',
-        });
+        }));
         break;
       }
       case CONSTANTS.TAGLINE_CONTEST: {
-        props.getData({ characteristic1: 'typeOfTagline' });
+        dispatch(getDataForContest({ characteristic1: 'typeOfTagline' }));
         break;
       }
       case CONSTANTS.LOGO_CONTEST: {
-        props.getData({ characteristic1: 'brandStyle' });
+        dispatch(getDataForContest({ characteristic1: 'brandStyle' }));
         break;
       }
+
+      default:
+        dispatch(getDataForContest({
+          characteristic1: 'nameStyle',
+          characteristic2: 'typeOfName',
+        }));
+        break;
     }
-  };
+  }, [contestType, dispatch]);
 
   useEffect(() => {
     getPreference();
-  }, []);
+  }, [getPreference]);
 
   if (error) {
     return <TryAgain getData={getPreference} />;
@@ -89,7 +97,7 @@ const ContestForm = (props) => {
             targetCustomer: '',
             file: '',
             ...variableOptions[contestType],
-            ...initialValues,
+            ...defaultData,
           }}
           onSubmit={handleSubmit}
           validationSchema={Schems.ContestSchem(contestType)}
@@ -160,7 +168,11 @@ const ContestForm = (props) => {
               />
             </div>
 
-            <OptionalSelects {...props} />
+            <OptionalSelects
+              contestType={contestType}
+              data={data}
+              isFetching={isFetching}
+            />
 
             <FieldFileInput
               name="file"
@@ -186,19 +198,4 @@ const ContestForm = (props) => {
   );
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { isEditContest } = state.contestByIdStore;
-  return {
-    isEditContest,
-    contestCreationStore: state.contestCreationStore,
-    dataForContest: state.dataForContest,
-    initialValues: ownProps.defaultData,
-  };
-};
-const mapDispatchToProps = (dispatch) => ({
-  getData: (data) => dispatch(getDataForContest(data)),
-});
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ContestForm)
-);
+export default withRouter(ContestForm);

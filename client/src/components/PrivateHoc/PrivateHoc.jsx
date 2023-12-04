@@ -1,41 +1,39 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { getUser } from '../../store/slices/userSlice';
+
 import Spinner from '../Spinner/Spinner';
 
 const PrivateHoc = (Component, props) => {
-  class Hoc extends React.Component {
-    componentDidMount() {
-      if (!this.props.data) {
-        this.props.getUser();
-      }
-    }
+  const Hoc = (innerProps) => {
+    const dispatch = useDispatch();
+    const userStore = useSelector((state) => state.userStore);
 
-    render() {
-      return (
-        <>
-          {this.props.isFetching ? (
-            <Spinner />
-          ) : (
-            <Component
-              history={this.props.history}
-              match={this.props.match}
-              {...props}
-            />
-          )}
-        </>
-      );
-    }
+    const allProps = { ...props, ...innerProps, ...userStore };
+
+    useEffect(() => {
+      if (!allProps.data) {
+        dispatch(getUser());
+      }
+    }, [allProps.data, dispatch]);
+
+    return (
+      <>
+        {allProps.isFetching ? (
+          <Spinner />
+        ) : (
+          <Component
+            history={allProps.history}
+            match={allProps.match}
+            {...allProps}
+          />
+        )}
+      </>
+    );
   }
 
-  const mapStateToProps = (state) => state.userStore;
-
-  const mapDispatchToProps = (dispatch) => ({
-    getUser: () => dispatch(getUser()),
-  });
-
-  return connect(mapStateToProps, mapDispatchToProps)(Hoc);
+  return Hoc;
 };
 
 export default PrivateHoc;

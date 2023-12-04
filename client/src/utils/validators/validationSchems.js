@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 import valid from 'card-validator';
 
-import CONSTANTS from '../../constants';
+import { CONSTANTS } from '../../constants';
 
-export default {
+export const Schems = {
   LoginSchem: yup.object().shape({
     email: yup
       .string()
@@ -219,12 +219,7 @@ export default {
   MessageSchema: yup.object({
     message: yup
       .string()
-      .test(
-        'test-message',
-        'required',
-        value => value && value.trim().length >= 1
-      )
-      .required('required'),
+      .min(1)
   }),
   CatalogSchema: yup.object({
     catalogName: yup
