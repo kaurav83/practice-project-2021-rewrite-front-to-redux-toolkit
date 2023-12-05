@@ -1,36 +1,42 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Catalog from '../Catalog/Catalog';
-import styles from '../CatalogListContainer/CatalogListContainer.module.sass';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+
 import {
   changeShowModeCatalog,
   deleteCatalog,
 } from '../../../../store/slices/chatSlice';
 
-const CatalogList = (props) => {
-  const goToCatalog = (event, catalog) => {
-    props.changeShowModeCatalog(catalog);
-    event.stopPropagation();
-  };
+import Catalog from '../Catalog/Catalog';
+import styles from '../CatalogListContainer/CatalogListContainer.module.sass';
 
-  const deleteCatalog = (event, catalogId) => {
-    props.deleteCatalog({ catalogId });
+const CatalogList = (props) => {
+  const dispatch = useDispatch();
+
+  const goToCatalog = useCallback((event, catalog) => {
+    dispatch(changeShowModeCatalog(catalog));
     event.stopPropagation();
-  };
+  }, [dispatch]);
+
+  const deleteCatalogCallback = useCallback((event, catalogId) => {
+    dispatch(deleteCatalog({ catalogId }));
+    event.stopPropagation();
+  }, [dispatch]);
 
   const getListCatalog = () => {
     const { catalogList } = props;
     const elementList = [];
+
     catalogList.forEach((catalog) => {
       elementList.push(
         <Catalog
           catalog={catalog}
           key={catalog._id}
-          deleteCatalog={deleteCatalog}
+          deleteCatalog={deleteCatalogCallback}
           goToCatalog={goToCatalog}
         />
       );
     });
+
     return elementList.length ? (
       elementList
     ) : (
@@ -38,12 +44,11 @@ const CatalogList = (props) => {
     );
   };
 
-  return <div className={styles.listContainer}>{getListCatalog()}</div>;
+  return (
+    <div className={styles.listContainer}>
+      {getListCatalog()}
+    </div>
+  );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  changeShowModeCatalog: (data) => dispatch(changeShowModeCatalog(data)),
-  deleteCatalog: (data) => dispatch(deleteCatalog(data)),
-});
-
-export default connect(null, mapDispatchToProps)(CatalogList);
+export default CatalogList;

@@ -54,12 +54,11 @@ const ContestPage = (props) => {
     return () => dispatch(changeEditContest(false));
     // eslint-disable-next-line
   }, []);
-
   useEffect(() => {
-    if (!userStore?.data) {
-      props?.history('/');
+    if (!userStore.data) {
+      props.history.push('/login');
     }
-  }, [userStore?.data, props]);
+  }, [userStore.data, props]);
 
   const setOffersList = () => {
     const array = [];

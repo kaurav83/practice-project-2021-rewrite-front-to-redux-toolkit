@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { CONSTANTS } from '../../constants';
@@ -18,16 +18,18 @@ const StartContestPage = props => {
     props.history.replace('/');
   }
 
-  const setBundle = bundleStr => {
+  const setBundle = useCallback((bundleStr) => {
     const array = bundleStr.toLowerCase().split('+');
     const bundleList = {};
     bundleList.first = array[0];
+
     for (let i = 0; i < array.length; i++) {
       bundleList[array[i]] = i === array.length - 1 ? 'payment' : array[i + 1];
     }
+    
     dispatch(updateBundle(bundleList));
     props.history.push(`/startContest/${bundleList.first}Contest`);
-  };
+  }, [dispatch, props]);
 
   return (
     <div>

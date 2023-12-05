@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { saveContestToStore } from '../../store/slices/contestCreationSlice';
@@ -15,6 +15,12 @@ const ContestCreationPage = (props) => {
   const formRef = useRef();
   const dispatch = useDispatch();
   const { contestCreationStore, bundleStore } = useSelector((state) => state);
+  
+  useEffect(() => {
+    if (!bundleStore.bundle) {
+      props.history.replace('/startContest');
+    }
+  }, [bundleStore.bundle, props]);
 
   const contestData = contestCreationStore.contests[props.contestType]
     ? contestCreationStore.contests[props.contestType]
@@ -35,8 +41,6 @@ const ContestCreationPage = (props) => {
       formRef.current.handleSubmit();
     }
   };
-
-  !bundleStore.bundle && props.history.replace('/startContest');
 
   return (
     <div>

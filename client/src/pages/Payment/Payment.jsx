@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
@@ -20,6 +20,12 @@ const Payment = (props) => {
       contests
     }
   } = useSelector((state) => state);
+
+  useEffect(() => {
+    if (isEmpty(contests)) {
+      props.history.replace('startContest');
+    }
+  }, [props, contests]);
 
   const sendPay = (values) => {
     const contestArray = [];
@@ -53,10 +59,6 @@ const Payment = (props) => {
   const goBack = () => {
     props.history.goBack();
   };
-
-  if (isEmpty(contests)) {
-    props.history.replace('startContest');
-  }
 
   return (
     <div>
