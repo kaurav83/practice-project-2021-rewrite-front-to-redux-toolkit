@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
 import {
-  changeChatShow,
   setPreviewChatMode,
   getPreviewChat,
 } from '../../../../store/slices/chatSlice';
@@ -21,7 +20,6 @@ import styles from './Chat.module.sass';
 const Chat = () => {
   const {
     isExpanded,
-    isShow,
     isShowCatalogCreation,
     isShowChatsInCatalog,
     chatMode,
@@ -104,21 +102,14 @@ const Chat = () => {
   };
 
   return (
-    <div
-      className={classNames(styles.chatContainer, {
-        [styles.showChat]: isShow,
-      })}
-    >
+    <>
       {error && <ChatError getData={getPreviewChat} />}
 
       {isShowCatalogCreation && <CatalogCreation />}
 
       {isExpanded ? <Dialog userId={id} /> : renderDialogList()}
 
-      <div className={styles.toggleChat} onClick={() => dispatch(changeChatShow())}>
-        {isShow ? 'Hide Chat' : 'Show Chat'}
-      </div>
-    </div>
+    </>
   );
 };
 

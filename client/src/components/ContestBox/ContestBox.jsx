@@ -90,6 +90,7 @@ const ContestBox = props => {
           </div>
         </div>
       </div>
+
       <div className={styles.entryAndTimeContainer}>
         <div className={styles.entriesContainer}>
           <div className={styles.entriesCounter}>
@@ -103,6 +104,7 @@ const ContestBox = props => {
 
           <span>Entries</span>
         </div>
+        
         <div className={styles.timeContainer}>
           <span className={styles.timeContest}>{getTimeStr()}</span>
 

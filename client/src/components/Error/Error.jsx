@@ -29,6 +29,7 @@ const Error = props => {
   return (
     <div className={styles.errorContainer}>
       <span>{getMessage()}</span>
+      
       <i className='far fa-times-circle' onClick={() => dispatch(clearError())} />
     </div>
   );

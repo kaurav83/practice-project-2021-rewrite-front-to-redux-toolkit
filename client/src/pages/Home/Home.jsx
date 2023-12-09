@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Header from '../../components/Header/Header';
+
 import { CONSTANTS } from '../../constants';
+import { carouselConstants } from '../../carouselConstants';
+
+import Header from '../../components/Header/Header';
 import SlideBar from '../../components/SlideBar/SlideBar';
 import Footer from '../../components/Footer/Footer';
-import styles from './Home.module.sass';
-import { carouselConstants } from '../../carouselConstants';
 import Spinner from '../../components/Spinner/Spinner';
+import styles from './Home.module.sass';
 
 const Home = () => {
   const { isFetching, data } = useSelector((state) => state.userStore);
@@ -70,6 +72,7 @@ const Home = () => {
                 carouselType={carouselConstants.MAIN_SLIDER}
               />
             </div>
+            
             <div className={styles.container__description}>
               <h2 className={styles.blueUnderline}>Why Squadhelp?</h2>
 
@@ -90,6 +93,7 @@ const Home = () => {
                     largest naming platform across the globe .
                   </p>
                 </div>
+
                 <div className={styles.card}>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}more-benifits-high-quality-icon.png`}
@@ -105,6 +109,7 @@ const Home = () => {
                     ensure two-way communication throughout your contest.
                   </p>
                 </div>
+
                 <div className={styles.card}>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}more-benifits-trademark-icon.png`}

@@ -38,6 +38,7 @@ const OfferBox = (props) => {
     participants.sort(
       (participant1, participant2) => participant1 - participant2
     );
+
     for (let i = 0; i < messagesPreview.length; i++) {
       if (isEqual(participants, messagesPreview[i].participants)) {
         return {
@@ -178,6 +179,7 @@ const OfferBox = (props) => {
             />
           </div>
         </div>
+        
         <div className={styles.responseConainer}>
           {contestType === CONSTANTS.LOGO_CONTEST
             ? (

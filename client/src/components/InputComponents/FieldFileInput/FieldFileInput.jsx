@@ -17,9 +17,11 @@ const FieldFileInput = ({ classes, name, ...rest }) => {
       <label htmlFor='fileInput' className={labelClass}>
         Choose file
       </label>
+
       <span id='fileNameContainer' className={fileNameClass}>
         {getFileName()}
       </span>
+      
       <input {...restFields} className={fileInput} id='fileInput' type='file' />
     </div>
   );

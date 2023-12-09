@@ -48,6 +48,7 @@ const StartContestPage = props => {
 
         <ProgressBar currentStep={1} />
       </div>
+      
       <div className={styles.baseBundleContainer}>
         <div className={styles.infoBaseBundles}>
           <span className={styles.headerInfo}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
 import {
   updateContest,
   clearContestUpdationStore,
@@ -18,12 +19,15 @@ const Brief = (props) => {
 
   const setNewContestData = (values) => {
     const data = new FormData();
+
     Object.keys(values).forEach((key) => {
       if (key !== 'file' && values[key]) data.append(key, values[key]);
     });
+
     if (values.file instanceof File) {
       data.append('file', values.file);
     }
+
     data.append('contestId', props.contestData.id);
 
     dispatch(updateContest(data));
@@ -43,6 +47,7 @@ const Brief = (props) => {
       originalFileName,
       contestType,
     } = props.contestData;
+
     const data = {
       focusOfWork,
       industry,
@@ -56,7 +61,9 @@ const Brief = (props) => {
       originalFileName,
       contestType,
     };
+
     const defaultData = {};
+
     Object.keys(data).forEach((key) => {
       if (data[key]) {
         if (key === 'originalFileName') {
@@ -98,6 +105,7 @@ const Brief = (props) => {
           clearError={clearContestUpdationStore}
         />
       )}
+
       <ContestForm
         contestType={contestData.contestType}
         defaultData={getContestObjInfo()}

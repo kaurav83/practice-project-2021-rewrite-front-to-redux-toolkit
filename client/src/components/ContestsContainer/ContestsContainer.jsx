@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 
-import styles from './ContestContainer.module.sass';
 import Spinner from '../Spinner/Spinner';
+import styles from './ContestContainer.module.sass';
 
 const ContestsContainer = (props) => {
   const {

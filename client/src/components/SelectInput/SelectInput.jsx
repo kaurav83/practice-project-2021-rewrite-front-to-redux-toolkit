@@ -19,6 +19,7 @@ const SelectInput = ({
 
     for (let i = 0; optionsArray && i < optionsArray.length; i++) {
       let option;
+      
       if (valueArray) {
         option = (
           <option key={i} value={valueArray[i]}>

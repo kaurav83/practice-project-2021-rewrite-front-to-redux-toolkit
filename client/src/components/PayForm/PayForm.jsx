@@ -26,6 +26,7 @@ const PayForm = (props) => {
   return (
     <div className={styles.payFormContainer}>
       <span className={styles.headerInfo}>Payment Information</span>
+
       <Formik
         initialValues={{
           focusOnElement: '',
@@ -155,6 +156,7 @@ const PayForm = (props) => {
           );
         }}
       </Formik>
+      
       {isPayForOrder && (
         <div className={styles.totalSum}>
           <span>Total: $100.00</span>

@@ -68,6 +68,7 @@ const DialogBox = props => {
 
           <span className={styles.interlocutorMessage}>{text}</span>
         </div>
+        
         <div className={styles.buttonsContainer}>
           <span className={styles.time}>{getTimeStr(createAt)}</span>
 

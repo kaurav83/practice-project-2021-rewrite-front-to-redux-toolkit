@@ -32,6 +32,7 @@ const SliderBar = props => {
 
   const renderSlides = () => {
     const { carouselType } = props;
+    
     switch (carouselType) {
       case carouselConstants.MAIN_SLIDER: {
         return Object.keys(props.images).map((key, index) => (

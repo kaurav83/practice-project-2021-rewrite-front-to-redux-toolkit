@@ -1,14 +1,16 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
+
 import {
   changeShowModeCatalog,
   changeRenameCatalogMode,
   changeCatalogName,
 } from '../../../../store/slices/chatSlice';
-import styles from './CatalogHeader.module.sass';
-import FormInput from '../../../FormInput/FormInput';
 import { Schems } from '../../../../utils/validators/validationSchems';
+
+import FormInput from '../../../FormInput/FormInput';
+import styles from './CatalogHeader.module.sass';
 
 const CatalogListHeader = (props) => {
   const dispatch = useDispatch();

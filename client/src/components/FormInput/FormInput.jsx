@@ -14,6 +14,7 @@ const FormInput = ({ classes, label, name, ...rest }) => (
         [classes.notValid]: touched && error,
         [classes.valid]: touched && !error,
       });
+
       return (
         <div className={classes.container}>
           <input
@@ -23,6 +24,7 @@ const FormInput = ({ classes, label, name, ...rest }) => (
             className={inputClassName}
             {...rest}
           />
+          
           <ErrorMessage
             name={name}
             component='span'

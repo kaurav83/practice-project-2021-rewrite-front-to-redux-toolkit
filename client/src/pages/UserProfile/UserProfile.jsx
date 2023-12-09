@@ -8,7 +8,6 @@ import { changeProfileViewMode } from '../../store/slices/userProfileSlice';
 
 import UserInfo from '../../components/UserInfo/UserInfo';
 import PayForm from '../../components/PayForm/PayForm';
-
 import Error from '../../components/Error/Error';
 import Header from '../../components/Header/Header';
 import styles from './UserProfile.module.sass';

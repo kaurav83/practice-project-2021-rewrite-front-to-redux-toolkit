@@ -1,9 +1,11 @@
 import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+
 import {
   getCatalogList,
   removeChatFromCatalog,
 } from '../../../../store/slices/chatSlice';
+
 import CatalogList from '../CatalogList/CatalogList';
 import DialogList from '../../DialogComponents/DialogList/DialogList';
 
@@ -39,6 +41,7 @@ const CatalogListContainer = () => {
         }
       }
     }
+    
     return dialogsInCatalog;
   };
 

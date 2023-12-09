@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
-import SelectInput from '../../../SelectInput/SelectInput';
+
 import { addChatToCatalog } from '../../../../store/slices/chatSlice';
+
+import SelectInput from '../../../SelectInput/SelectInput';
 import styles from './AddToCatalog.module.sass';
 
 const AddToCatalog = () => {
@@ -11,6 +13,7 @@ const AddToCatalog = () => {
 
   const getCatalogsNames = () => {
     const namesArray = [];
+
     catalogList.forEach((catalog) => {
       namesArray.push(catalog.catalogName);
     });
@@ -20,6 +23,7 @@ const AddToCatalog = () => {
 
   const getValueArray = () => {
     const valueArray = [];
+
     catalogList.forEach((catalog) => {
       valueArray.push(catalog._id);
     });

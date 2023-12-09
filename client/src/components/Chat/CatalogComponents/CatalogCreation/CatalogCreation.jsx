@@ -37,6 +37,7 @@ const CatalogCreation = () => {
             className="far fa-times-circle"
             onClick={() => dispatch(changeShowAddChatToCatalogMenu())}
           />
+
           <div className={styles.buttonsContainer}>
             <span
               onClick={() => dispatch(changeTypeOfChatAdding(ADD_CHAT_TO_OLD_CATALOG))}
@@ -47,6 +48,7 @@ const CatalogCreation = () => {
             >
               Old
             </span>
+            
             <span
               onClick={() =>
                 dispatch(changeTypeOfChatAdding(CREATE_NEW_CATALOG_AND_ADD_CHAT))

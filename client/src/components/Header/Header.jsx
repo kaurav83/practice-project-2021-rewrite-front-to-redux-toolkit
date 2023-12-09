@@ -132,7 +132,7 @@ const Header = ({ history }) => {
         <div className={styles.numberContainer}>
           <img src={`${CONSTANTS.STATIC_IMAGES_PATH}phone.png`} alt="phone" />
 
-          <span>(877)&nbsp;355-3585</span>
+          <a href="tel:+8773553585">(877)&nbsp;355-3585</a>
         </div>
 
         <div className={styles.userButtonsContainer}>
