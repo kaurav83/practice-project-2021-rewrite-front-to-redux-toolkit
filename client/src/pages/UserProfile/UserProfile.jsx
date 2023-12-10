@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import classNames from 'classnames';
 
 import { CONSTANTS } from '../../constants';
 import { cashOut, clearPaymentStore } from '../../store/slices/paymentSlice';
 import { changeProfileViewMode } from '../../store/slices/userProfileSlice';
+import userProfileReducer from '../../store/slices/userProfileSlice';
 
 import UserInfo from '../../components/UserInfo/UserInfo';
 import PayForm from '../../components/PayForm/PayForm';
@@ -17,8 +18,17 @@ const UserProfile = (props) => {
   const userData = useSelector((state) => state.userStore.data);
   const balance = userData?.balance;
   const role = userData?.role;
-  const { profileViewMode } = useSelector((state) => state.userProfile);
+  const profileViewMode = useSelector((state) => state?.userProfile?.profileViewMode);
   const { error } = useSelector((state) => state.payment);
+  const store = useStore();
+
+  useEffect(() => {
+    store.reducerManager.add('userProfile', userProfileReducer);
+    dispatch(changeProfileViewMode(CONSTANTS.USER_INFO_MODE))
+
+    return () => store.reducerManager.remove('userProfile', userProfileReducer);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (!role) {
@@ -28,6 +38,7 @@ const UserProfile = (props) => {
 
   const pay = (values) => {
     const { number, expiry, cvc, sum } = values;
+
     dispatch(cashOut({
       number,
       expiry,
@@ -39,6 +50,7 @@ const UserProfile = (props) => {
   return (
     <div>
       <Header />
+
       <div className={styles.mainContainer}>
         <div className={styles.aside}>
           <span className={styles.headerAside}>Select Option</span>
