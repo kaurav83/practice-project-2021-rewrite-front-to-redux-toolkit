@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
 
@@ -8,16 +8,16 @@ import { Schems } from '../../../../utils/validators/validationSchems';
 import FormInput from '../../../FormInput/FormInput';
 import styles from './CreateCatalog.module.sass';
 
-const CreateCatalog = (props) => {
+const CreateCatalog = () => {
   const dispatch = useDispatch();
   const { addChatId } = useSelector((state) => state.chatStore);
 
-  const click = (values) => {
+  const click = useCallback((values) => {
     dispatch(createCatalog({
       catalogName: values.catalogName,
       chatId: addChatId
     }));
-  };
+  }, [dispatch, addChatId]);
 
   return (
     <Formik

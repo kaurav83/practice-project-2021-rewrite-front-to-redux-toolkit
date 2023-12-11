@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 
@@ -13,7 +13,7 @@ const ChatInput = () => {
   const dispatch = useDispatch();
   const { interlocutor } = useSelector((state) => state.chatStore);
 
-  const submitHandler = (values, { resetForm }) => {
+  const submitHandler = useCallback((values, { resetForm }) => {
     if (values.message.trim()) {
       dispatch(sendMessage({
         messageBody: values.message.trim(),
@@ -23,7 +23,7 @@ const ChatInput = () => {
     }
 
     resetForm();
-  };
+  }, [dispatch, interlocutor]);
 
   return (
     <div className={styles.inputContainer}>

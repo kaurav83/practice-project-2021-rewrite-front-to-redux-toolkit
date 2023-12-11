@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
 
@@ -31,7 +31,7 @@ const RegistrationForm = (props) => {
     return () => dispatch(clearAuth());
   }, [dispatch]);
 
-  const clicked = values => {
+  const clicked = useCallback((values) => {
     const { agreeOfTerms, confirmPassword, ...data } = values;
 
     dispatch(checkAuth({
@@ -39,7 +39,7 @@ const RegistrationForm = (props) => {
       history: props.history,
       authMode: CONSTANTS.AUTH_MODE.REGISTER,
     }));
-  };
+  }, [dispatch, props.history]);
 
   return (
     <div className={styles.signUpFormContainer}>

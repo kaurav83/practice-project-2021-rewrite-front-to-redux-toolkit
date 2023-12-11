@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { updateUser } from '../../store/slices/userSlice';
@@ -23,14 +23,14 @@ const UserInfo = () => {
     }
   } = useSelector((state) => state.userStore);
   
-  const updateUserData = (values) => {
+  const updateUserData = useCallback((values) => {
     const formData = new FormData();
     formData.append('file', values.file);
     formData.append('firstName', values.firstName);
     formData.append('lastName', values.lastName);
     formData.append('displayName', values.displayName);
     dispatch(updateUser(formData));
-  };
+  }, [dispatch]);
 
   return (
     <div className={styles.mainContainer}>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { saveContestToStore } from '../../store/slices/contestCreationSlice';
@@ -36,11 +36,11 @@ const ContestCreationPage = (props) => {
     props.history.push(route);
   };
 
-  const submitForm = () => {
+  const submitForm = useCallback(() => {
     if (formRef.current) {
       formRef.current.handleSubmit();
     }
-  };
+  }, []);
 
   return (
     <div>

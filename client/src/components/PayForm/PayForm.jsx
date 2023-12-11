@@ -17,9 +17,9 @@ const PayForm = (props) => {
     dispatch(changeFocusOnCard(name));
   }, [dispatch]);
 
-  const pay = (values) => {
+  const pay = useCallback((values) => {
     props.sendRequest(values);
-  };
+  }, [props]);
 
   const { focusOnElement, isPayForOrder } = props;
 
@@ -75,7 +75,7 @@ const PayForm = (props) => {
                 {!isPayForOrder && (
                   <div className={styles.bigInput}>
                     <span>Sum</span>
-                    
+
                     <PayInput
                       name="sum"
                       classes={{
@@ -156,7 +156,7 @@ const PayForm = (props) => {
           );
         }}
       </Formik>
-      
+
       {isPayForOrder && (
         <div className={styles.totalSum}>
           <span>Total: $100.00</span>

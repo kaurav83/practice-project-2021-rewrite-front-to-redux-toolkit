@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -17,7 +17,7 @@ const Brief = (props) => {
   const { isEditContest } = useSelector((state) => state.contestByIdStore);
   const { contestUpdationStore, userStore } = useSelector((state) => state);
 
-  const setNewContestData = (values) => {
+  const setNewContestData = useCallback((values) => {
     const data = new FormData();
 
     Object.keys(values).forEach((key) => {
@@ -31,7 +31,7 @@ const Brief = (props) => {
     data.append('contestId', props.contestData.id);
 
     dispatch(updateContest(data));
-  };
+  }, [dispatch, props.contestData.id]);
 
   const getContestObjInfo = () => {
     const {

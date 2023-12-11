@@ -68,7 +68,7 @@ const CreatorDashboard = (props) => {
     return true;
   };
 
-  const getPredicateOfRequest = () => {
+  const getPredicateOfRequest = useCallback(() => {
     const obj = {};
 
     Object.keys(creatorFilter).forEach((el) => {
@@ -79,9 +79,9 @@ const CreatorDashboard = (props) => {
     obj.ownEntries = creatorFilter.ownEntries;
 
     return obj;
-  };
+  }, [creatorFilter]);
 
-  const loadMore = (startFrom) => {
+  const loadMore = useCallback((startFrom) => {
     dispatch(getContests(
       {
         requestData: {
@@ -91,7 +91,7 @@ const CreatorDashboard = (props) => {
         },
         role: CONSTANTS.CREATOR
       }));
-  };
+  }, [dispatch, getPredicateOfRequest]);
 
   const setContestList = () => {
     const array = [];
@@ -109,11 +109,11 @@ const CreatorDashboard = (props) => {
     return array;
   };
 
-  const goToExtended = (contestId) => {
+  const goToExtended = useCallback((contestId) => {
     props.history.push(`/contest/${contestId}`);
-  };
+  }, [props.history]);
 
-  const tryLoadAgain = () => {
+  const tryLoadAgain = useCallback(() => {
     dispatch(clearContestsList());
     dispatch(getContests({
       requestData: {
@@ -123,7 +123,7 @@ const CreatorDashboard = (props) => {
       },
       role: CONSTANTS.CREATOR
     }));
-  };
+  }, [dispatch, getPredicateOfRequest]);
 
   useEffect(() => {
     if (

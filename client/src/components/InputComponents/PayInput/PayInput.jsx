@@ -20,11 +20,12 @@ const PayInput = props => {
     return (
       <div className={classes.container}>
         <input
+          value={field.value || ''}
           className={classNames(classes.input, {
             [classes.notValid]: touched && error,
           })}
           placeholder={label}
-          {...field}
+          onChange={(e) => helpers.setValue(e.target.value)}
         />
 
         {touched && error && (
@@ -58,6 +59,7 @@ const PayInput = props => {
       </div>
     );
   }
+
   return (
     <div className={classes.container}>
       <input

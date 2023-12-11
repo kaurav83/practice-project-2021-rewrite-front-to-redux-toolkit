@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
@@ -27,7 +27,7 @@ const Payment = (props) => {
     }
   }, [props, contests]);
 
-  const sendPay = (values) => {
+  const sendPay = useCallback((values) => {
     const contestArray = [];
 
     Object.keys(contests).forEach((key) =>
@@ -54,11 +54,11 @@ const Payment = (props) => {
       },
       history: props.history,
     }));
-  };
+  }, [props.history, contests, dispatch]);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     props.history.goBack();
-  };
+  }, [props.history]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
 
@@ -47,7 +47,7 @@ const OfferForm = props => {
     );
   };
 
-  const setOffer = (values, { resetForm }) => {
+  const setOffer = useCallback((values, { resetForm }) => {
     dispatch(clearAddOfferError());
 
     const data = new FormData();
@@ -60,7 +60,7 @@ const OfferForm = props => {
 
     dispatch(addOffer(data));
     resetForm();
-  };
+  }, [dispatch, props]);
 
   const validationSchema =
     props.contestType === CONSTANTS.LOGO_CONTEST

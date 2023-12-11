@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import classNames from 'classnames';
 
@@ -36,7 +36,7 @@ const UserProfile = (props) => {
     }
   }, [role, props]);
 
-  const pay = (values) => {
+  const pay = useCallback((values) => {
     const { number, expiry, cvc, sum } = values;
 
     dispatch(cashOut({
@@ -45,7 +45,7 @@ const UserProfile = (props) => {
       cvc,
       sum,
     }));
-  };
+  }, [dispatch]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 
@@ -28,13 +28,13 @@ const LoginForm = (props) => {
     return () => dispatch(clearAuth());
   }, [dispatch]);
 
-  const clicked = (values) => {
+  const clicked = useCallback((values) => {
     dispatch(checkAuth({
       data: values,
       authMode: CONSTANTS.AUTH_MODE.LOGIN,
       history
     }));
-  };
+  }, [dispatch, history]);
 
   return (
     <div className={styles.loginForm}>

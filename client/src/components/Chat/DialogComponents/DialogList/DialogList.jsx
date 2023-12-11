@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
@@ -16,20 +16,20 @@ const DialogList = ({ preview, userId, removeChat }) => {
   const dispatch = useDispatch();
   const { chatMode } = useSelector((state) => state.chatStore);
 
-  const changeFavorite = (data, event) => {
+  const changeFavorite = useCallback((data, event) => {
     dispatch(changeChatFavorite(data));
     event.stopPropagation();
-  };
+  }, [dispatch]);
 
-  const changeBlackList = (data, event) => {
+  const changeBlackList = useCallback((data, event) => {
     dispatch(changeChatBlock(data));
     event.stopPropagation();
-  };
+  }, [dispatch]);
 
-  const changeShowCatalogCreation = (event, chatId) => {
+  const changeShowCatalogCreation = useCallback((event, chatId) => {
     dispatch(changeShowAddChatToCatalogMenu(chatId));
     event.stopPropagation();
-  };
+  }, [dispatch]);
 
   const onlyFavoriteDialogs = (chatPreview, userId) =>
     chatPreview.favoriteList[chatPreview.participants.indexOf(userId)];
@@ -37,7 +37,7 @@ const DialogList = ({ preview, userId, removeChat }) => {
   const onlyBlockDialogs = (chatPreview, userId) =>
     chatPreview.blackList[chatPreview.participants.indexOf(userId)];
 
-  const getTimeStr = (time) => {
+  const getTimeStr = useCallback((time) => {
     const currentTime = moment();
 
     if (currentTime.isSame(time, 'day')) return moment(time).format('HH:mm');
@@ -45,7 +45,7 @@ const DialogList = ({ preview, userId, removeChat }) => {
     if (currentTime.isSame(time, 'year')) return moment(time).format('MM DD');
 
     return moment(time).format('MMMM DD, YYYY');
-  };
+  }, []);
 
   const renderPreview = (filterFunc) => {
     const arrayList = [];
