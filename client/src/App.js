@@ -14,6 +14,7 @@ import { HomeLazy } from './pages/Home/Home.lazy';
 import { ContestPageLazy } from './pages/ContestPage/ContestPage.lazy';
 import { UserProfileLazy } from './pages/UserProfile/UserProfile.lazy';
 import { ContestCreationPageLazy } from './pages/ContestCreation/ContestCreationPage.lazy';
+import { HowItWorksPageLazy } from './pages/HowItWorksPage/HowItWorksPage.lazy';
 import OnlyNotAuthorizedUserHoc from './components/OnlyNotAuthorizedUserHoc/OnlyNotAuthorizedUserHoc';
 import PrivateHoc from './components/PrivateHoc/PrivateHoc';
 import NotFound from './components/NotFound/NotFound';
@@ -39,6 +40,8 @@ const App = () => (
     <Suspense fallback={<div className="suspense-spinner"><Spinner /></div>}>
       <Switch>
         <Route exact path='/' component={HomeLazy} />
+
+        <Route exact path='/how-it-works' component={HowItWorksPageLazy} />
 
         <Route
           exact
