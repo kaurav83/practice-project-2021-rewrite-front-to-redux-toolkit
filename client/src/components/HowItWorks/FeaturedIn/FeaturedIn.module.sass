@@ -1,0 +1,71 @@
+.featuredIn
+  margin: 0 auto
+  padding: 0 16px
+  max-width: 1188px
+  margin-bottom: 80px
+  padding-top: 50px
+  @media screen and (min-width: 768px)
+    padding: 0 50px
+    padding-top: 50px
+    margin-bottom: 24px
+  .featuredInWrapper
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+    flex-direction: column
+    @media screen and (min-width: 992px)
+      flex-direction: initial
+  
+  .featuredInLeftSide
+    font-size: 28px
+    font-weight: 300
+    line-height: 1.5
+    width: 100%
+    margin-bottom: 8px
+    @media screen and (min-width: 992px)
+      width: initial
+      padding-right: 20px
+      margin-bottom: unset
+
+  .featuredList
+    display: flex
+    align-items: flex-start
+    justify-content: center
+    flex-wrap: wrap
+    position: relative
+    width: 100%
+    gap: 20px
+    border-top: 1px solid #e7eaf3
+    padding-top: 32px
+    @media screen and (min-width: 611px)
+      justify-content: space-between
+    @media screen and (min-width: 992px)
+      width: unset
+      border-top: unset
+      padding-top: unset
+      &:before
+        content: ''
+        border-top: 1px solid #e7eaf3
+        width: 100%
+        position: absolute
+        top: -50%
+        right: 0
+
+  .featuredItem
+    // padding: 20px
+    flex: 1 1 auto
+    @media screen and (min-width: 992px)
+      padding: 0 20px
+    // &:first-child
+    //   padding: unset
+
+  .featuredImg
+    width: 100%
+    min-width: 96px
+
+  .featuredLink
+    display: block
+    width: 100%
+    max-width: 96px
+    margin: 0 auto

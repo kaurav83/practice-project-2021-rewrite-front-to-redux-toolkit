@@ -1,0 +1,64 @@
+.accordion
+  width: auto
+
+.accordionItem
+  margin-bottom: 16px
+  color: #1e2022
+  font-size: 16px
+
+.accordionTitle
+  display: flex
+  justify-content: space-between
+  align-items: center
+  cursor: pointer
+  padding: 16px 20px
+  user-select: none
+  border: 1px solid rgba(0, 0, 0, .1)
+  border-radius: 5px
+  transition: all .3s ease
+  &:hover
+    color: #377dff
+    background: rgba(55, 125, 255, .1)
+  &.isOpen
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
+.title
+  line-height: 1.5
+
+.content
+  height: 0
+  max-height: 0
+  opacity: 0
+  overflow: hidden
+  transition: opacity 0.3s ease
+  ul
+    display: flex
+    flex-direction: column
+    li
+      list-style-type: disc
+      margin-left: 30px
+  a
+    color: #377dff
+    text-decoration: none
+
+.content.show
+  height: 100%
+  max-height: 1000px
+  opacity: 1
+  transition: opacity 0.3s ease
+  overflow: visible
+  padding: 16px
+  border-bottom: 1px solid rgba(0, 0, 0, .1)
+  border-right: 1px solid rgba(0, 0, 0, .1)
+  border-left: 1px solid rgba(0, 0, 0, .1)
+  border-radius: 5px
+  border-top-left-radius: 0
+  border-top-right-radius: 0
+  line-height: 1.5
+
+.indicator
+  transition: 0.3s
+  color: #377dff
+
+.indicator.isOpen
+  transform: rotate(90deg)

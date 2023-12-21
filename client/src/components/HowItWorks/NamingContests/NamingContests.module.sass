@@ -1,0 +1,105 @@
+.namingContests
+  margin-top: 32px
+  border-top: 1px solid #ddd
+  border-bottom: 1px solid #ddd
+  .namingContestsWrapper
+    max-width: 1188px
+    padding: 0 16px
+    margin: 0 auto
+    @media screen and (min-width: 768px)
+      padding: 0 50px
+    .namingContestsContainer
+      padding: 128px 0
+      text-align: center
+
+      .serviceImg
+        max-width: 72px
+        margin: 0 auto
+      .subTitle
+        font-weight: 400
+        font-size: 32px
+        margin-top: 16px
+      
+      .mainPart
+        display: grid
+        grid-template-columns: 1fr
+        margin-top: 60px
+        grid-auto-flow: revert
+        grid-template-areas: 'steps' 'picture'
+        @media screen and (min-width: 992px)
+          grid-template-columns: 1fr 1fr
+          grid-template-areas: 'picture steps'
+      .houseAgency
+        width: 100%
+        grid-area: picture
+        margin-top: 60px
+        @media screen and (min-width: 992px)
+          margin-top: unset
+          padding-right: 48px
+
+      .stepsContainer
+        grid-area: steps
+        @media screen and (min-width: 768px)
+          padding-left: 15px
+
+      .stepsList
+
+      .stepItem
+        position: relative
+        padding-left: 40px
+        padding-bottom: 16px
+        padding-top: 16px
+        &:before
+          content: ""
+          position: absolute
+          top: 0
+          bottom: 0
+          right: 0
+          left: 6px
+          width: 32px
+          height: 1px
+          border-top: 1px solid #e7eaf3
+          margin: auto auto auto 0
+        &::after
+          content: ""
+          position: absolute
+          top: 0
+          bottom: 0
+          right: 0
+          left: 5px
+          width: 1px
+          height: 100%
+          border-right: 1px solid #e7eaf3
+          margin: auto auto auto 0
+        &:first-child::after
+          height: 50%
+          top: auto
+        &:last-child::after
+          height: 50%
+          bottom: auto
+      .stepContainer
+        border-radius: 5px
+        border: 1px solid #e7eaf3
+        display: flex
+        align-items: center
+        padding: 32px
+      
+      .stepNumber
+        display: flex
+        font-weight: 500
+        color: #377dff
+        font-size: 56px
+        line-height: 1.2
+        margin-right: 16px
+
+      .stepDescription
+        flex: 1
+        margin-bottom: 0
+        color: #77838f
+        line-height: 1.7
+        text-align: left
+    
+          
+
+
+        

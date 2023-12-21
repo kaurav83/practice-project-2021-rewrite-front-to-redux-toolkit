@@ -1,0 +1,82 @@
+.services
+  margin-top: 64px
+  .servicesWrapper
+    max-width: 1188px
+    margin: 0 auto
+    padding: 0 16px
+    @media screen and (min-width: 768px)
+      padding: 0 50px
+  .servicesContainer
+    display: flex
+    flex-direction: column
+    justify-content: center
+  .hashTag
+    color: #377dff
+    background: rgba(55,125,255,.1)
+    border-color: transparent
+    font-size: 11px
+    font-weight: 400
+    padding: 11px 21px
+    border-radius: 99px
+    margin-bottom: 16px
+    width: max-content
+    display: inline-block
+    margin: 8px auto
+  .subTitle
+    font-weight: 400
+    font-size: 32px
+    margin: 8px auto
+  .description
+    color: #77838f
+    line-height: 1.7
+    font-size: 16px
+    margin: 0 auto
+
+  .servicesList
+    display: grid
+    grid-template-columns: 1fr
+    grid-gap: 32px
+    margin-top: 64px
+    @media screen and (min-width: 992px)
+      grid-template-columns: 1fr 1fr 1fr
+
+  .service
+    padding: 64px 16px
+    border: 1px solid #ddd
+    border-radius: 4px
+    text-align: center
+    display: grid
+    grid-gap: 32px
+
+  .serviceImg
+    max-width: 72px
+    margin: 0 auto
+
+  .serviceTitle
+    font-weight: 500
+    font-size: 24px
+
+  .serviceDescription
+    line-height: 1.7
+    color: #77838f
+
+  .serviceLink
+    background: #377dff
+    border: 1px solid transparent
+    border-color: #377dff
+    font-weight: 500
+    font-size: 16px
+    display: inline-block
+    user-select: none
+    padding: 12px 34px
+    line-height: 1.5
+    text-decoration: none
+    color: #fff
+    width: max-content
+    height: max-content
+    border-radius: 5px
+    margin: 0 auto
+    transition: all 0.2s ease-in-out
+    &:hover
+      box-shadow: 0 4px 11px rgba(55,125,255,.35)
+      transform: translateY(-3px)

@@ -1,0 +1,48 @@
+.achievements
+  max-width: 1188px
+  padding: 0 16px
+  margin: 0 auto
+  @media screen and (min-width: 768px)
+    padding: 0 50px
+  .achievementsWrapper
+    padding: 64px 0
+
+  .achievementsList
+    display: grid
+    grid-template-columns: 1fr
+    align-items: baseline
+    text-align: center
+    row-gap: 48px
+    @media screen and (min-width: 768px)
+      grid-template-columns: 1fr 10px 1fr 10px 1fr
+      row-gap: unset
+
+  .achievementsItem
+    @media screen and (min-width: 768px)
+      padding: 0 48px
+  
+  .achievementsFigure
+    max-width: 72px
+    width: 100%
+    margin: 0 auto
+    margin-bottom: 16px
+
+  .achievementsImg
+    max-width: 72px
+
+  .achivmentSeparator
+    height: 64px
+    border-left: 1px solid rgba(30, 32, 34, .2)
+    transform: rotate(15deg)
+    align-self: center
+    display: none
+    @media screen and (min-width: 768px)
+      display: block
+  
+  .achievementsText
+    color: #77838f
+    line-height: 1.7
+  
+  .achievementsTextBold
+    font-weight: 600
+    color: #1e2022

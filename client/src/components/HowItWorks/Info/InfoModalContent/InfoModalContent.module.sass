@@ -1,0 +1,105 @@
+.modalContent
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  max-width: 500px
+  max-height: 85vh
+  width: 100%
+.modalBtnWrapper
+  border-top: 1px solid #e7eaf3
+  padding: 16px
+  border-bottom-left-radius: 5px
+  border-bottom-right-radius: 5px
+  background: #fff
+  display: flex
+  .modalBtn
+    margin-left: auto
+    transition: all 0.2s ease-in-out
+    background: rgba(119,131,143,.1)
+    border-color: transparent
+    padding: 10px 18px
+    font-size: 14px
+    line-height: 1.5
+    border-radius: 4px
+    color: #77838f
+    &:hover
+      color: #fff
+      background: #77838f
+      box-shadow: 0 4px 11px rgba(119,131,143,.35)
+      transform: translateY(-3px)
+
+.modalBody
+  background: #fff
+  padding: 32px
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  font-size: 24px
+
+.modalTitle
+  font-weight: 500
+  color: #377dff
+  line-height: 1.5
+  margin-bottom: 8px
+
+.modalPromiseText
+  color: #77838f
+  line-height: 1.7
+  font-size: 16px
+  margin-bottom: 16px
+
+.mediaList
+  display: flex
+  flex-direction: column
+
+  .mediaItem
+    display: flex
+    align-items: center
+    padding: 10px 0
+  .mediaText
+    font-size: 16px
+    font-weight: 400
+    line-height: 1.5
+    color: #1e2022
+  .mediaLink
+    color: #377dff
+    text-decoration: none
+    background-color: transparent
+    &:hover
+      color: #0052ea
+
+  .mediaIconWrapper
+    position: relative
+    width: 32px
+    height: 32px
+    border-radius: 50%
+    display: inline-flex
+    flex: 0 0 auto
+    margin-right: 16px
+    align-self: baseline
+    &.heart
+      background: rgba(222,68,55,.1)
+      .mediaIcon
+        color: #de4437
+    &.smile
+      background: rgba(55,125,255,.1)
+      .mediaIcon
+        color: #377dff
+    &.studiovinari
+      background: rgba(0,201,167,.1)
+      .mediaIcon
+        color: #00c9a7
+    &.steam
+      background: rgba(222,68,55,.1)
+      .mediaIcon
+        color: #de4437
+    &.tenis
+      background: rgba(55,125,255,.1)
+      .mediaIcon
+        color: #377dff
+    .mediaIcon
+      font-size: 13.08px
+      position: absolute
+      left: 50%
+      top: 50%
+      transform: translate(-50%, -50%)

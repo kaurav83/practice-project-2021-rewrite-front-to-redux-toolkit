@@ -1,0 +1,108 @@
+.footerMiddle
+  border-top: 1px solid #f8f8f8
+  border-bottom: 1px solid #f8f8f8
+  padding: 60px 0
+
+  .footerTitle
+    padding: 0
+    margin-bottom: 20px
+    font-size: 19.2px
+    line-height: 32px
+    color: #333
+    margin: 0
+    font-weight: 700
+
+  .tranding
+    display: flex
+    flex-wrap: wrap
+    @media screen and (min-width: 640px)
+      gap: 0 32px
+
+  .trandingText
+    flex: 1 1 100%
+    order: -1
+    font-size: 14px
+    line-height: 20px
+    color: #77838f
+    @media screen and (min-width: 640px)
+      flex: 0 0 50%
+
+  .trandingItemLink
+    display: flex
+    align-items: center
+
+  .trandingListLinks
+    flex: 1 1 100%
+    order: 2
+    display: flex
+    flex-wrap: wrap
+    gap: 14px
+    @media screen and (min-width: 640px)
+      flex: 1 1 min-content
+      order: 1
+
+  .trandingLink
+    padding: 12px 16px
+    border: 1px solid #ebebeb
+    border-radius: 8px
+    background-color: #fbfcfe
+    display: flex
+    align-items: center
+    gap: 14px
+    font-size: 14px
+    line-height: 20px
+    font-weight: 600
+    text-decoration: none
+    color: #4a4a4a
+    svg
+      color: #cccccc
+      width: 16px
+      height: 16px
+    &:hover
+      color: #377dff
+      svg
+        color: #377dff
+
+  .search
+    flex: 1 1 100%
+    order: 1
+    display: flex
+    margin-top: 50px
+    margin-bottom: 30px
+    @media screen and (min-width: 640px)
+      order: 2
+      flex: 0 0 50%
+      margin-top: 20px
+      margin-bottom: unset
+    .field
+      width: calc(100% - 8px)
+      border: none
+      border-top-left-radius: 4px
+      border-bottom-left-radius: 4px
+      padding: 20px 16px
+      font-size: 18px
+      line-height: 28px
+      background-color: #fff
+      &:focus
+        outline: 1px solid #4980ff
+        outline-offset: -1px
+
+  .searchBtn
+    width: auto
+    padding: 20px 32px
+    color: white
+    border: none
+    cursor: pointer
+    background-color: #4980ff
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    svg
+      width: 28px
+      height: 28px
+      color: #fff
+
+  .trandingLink
+    svg
+      widht: 20px
+      height: 20px
+

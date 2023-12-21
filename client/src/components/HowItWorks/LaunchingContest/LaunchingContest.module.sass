@@ -1,0 +1,61 @@
+.launchingContest
+  max-width: 1188px
+  padding: 0 16px
+  margin: 64px auto
+  display: grid
+  grid-template-columns: 1fr
+  @media screen and (min-width: 768px)
+    padding: 0 50px
+  
+  @media screen and (min-width: 992px)
+    grid-template-columns: 270px 1fr
+    grid-gap: 30px
+
+  .navBarLaunching
+    background: #377dff
+    border-radius: 5px
+    margin-bottom: 48px
+    height: max-content
+    @media screen and (min-width: 992px)
+      max-width: unset
+      margin-bottom: unset
+
+    .launchingList
+      display: grid
+      grid-template-columns: 1fr
+      padding: 20px 32px
+      
+    .launchingItem
+      margin: 5px 0
+      &:first-child
+        margin-top: unset
+      &:last-child
+        margin-bottom: unset
+
+    .launchingLink
+      display: inline-flex
+      padding: 14px 0
+      color: rgba(255, 255, 255, .7)
+      text-decoration: none
+      &:hover
+        color: rgba(255, 255, 255, 1)
+
+  .launchingWrapper
+    .sectionWrapper
+      border-bottom: 1px solid rgba(0, 0, 0, .1)
+      padding-bottom: 64px
+      padding-top: 64px
+      &:first-child
+        padding-top: unset
+      &:last-child
+        border-bottom: unset
+        padding-bottom: unset
+        margin-bottom: unset
+
+    .titleSection
+      font-weight: 600
+      font-size: 28px
+      color: #377dff
+      margin-bottom: 16px
+
+
