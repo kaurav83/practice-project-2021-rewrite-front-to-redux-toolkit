@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import valid from 'card-validator';
+import moment from 'moment';
 
 import { CONSTANTS } from '../../constants';
 
@@ -231,4 +232,38 @@ export const Schems = {
       )
       .required('required'),
   }),
+  EventShema: yup.object({
+    eventName: yup
+      .string()
+      .min(3)
+      .required('This field is required'),
+    eventDate: yup
+      .string()
+      .required('Please enter the date')
+      .test(
+        'is-future-date',
+        'The date cannot be in the past',
+        (value) => {
+          if (!value) return false;
+
+          const today = moment().startOf('day');
+          const enteredDate = moment(value, "YYYY-MM-DD", true);
+
+          return enteredDate.isValid() && enteredDate.isSameOrAfter(today);
+        }
+      ),
+    eventTime: yup
+      .string()
+      .required('Please enter the time')
+      .test(
+        'is-correct-time',
+        'Time is not in valid format',
+        (value) => moment(value, "HH:mm", true).isValid()
+      ),
+    notifyBefore: yup
+      .number()
+      .required('Please enter a number')
+      .min(2, 'The value must be at least 2')
+      .integer('The value must be an integer')
+  })
 };

@@ -6,10 +6,11 @@ import { CONSTANTS } from '../../constants';
 import { clearUserStore } from '../../store/slices/userSlice';
 import { getUser } from '../../store/slices/userSlice';
 import { backToDialogList } from '../../store/slices/chatSlice';
-
+import { useEvents } from '../../hooks/useEvents';
 import styles from './Header.module.sass';
 
 const Header = ({ history }) => {
+  useEvents();
   const dispatch = useDispatch();
   const {
     isFetching,
@@ -56,29 +57,43 @@ const Header = ({ history }) => {
 
             <ul>
               <li>
-                <Link to="/dashboard" style={{ textDecoration: 'none' }}>
+                <Link
+                  to="/dashboard"
+                  className={styles.topMenuLink}
+                >
                   <span>View Dashboard</span>
                 </Link>
               </li>
               <li>
-                <Link to="/account" style={{ textDecoration: 'none' }}>
+                <Link
+                  to="/account"
+                  className={styles.topMenuLink}
+                >
                   <span>My Account</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="http:/www.google.com"
-                  style={{ textDecoration: 'none' }}
+                  className={styles.topMenuLink}
                 >
                   <span>Messages</span>
                 </Link>
               </li>
               <li>
                 <Link
+                  className={styles.topMenuLink}
                   to="http:/www.google.com"
-                  style={{ textDecoration: 'none' }}
                 >
                   <span>Affiliate Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/events"
+                  className={styles.topMenuLink}
+                >
+                  <span>Events</span>
                 </Link>
               </li>
               <li>

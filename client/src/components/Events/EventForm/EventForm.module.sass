@@ -1,0 +1,43 @@
+.eventForm
+  display: flex
+  flex-direction: column
+  align-items: stretch
+  justify-content: center
+  gap: 25px
+  margin: 0 auto
+  margin-top: 50px
+  width: max-content
+  @media screen and (min-width: 992px)
+    flex-direction: row
+    width: unset
+  div
+    display: flex
+    position: relative
+    input
+      border: 1px solid #377dff
+      padding-left: 10px
+      padding-right: 10px
+      border-radius: 5px
+      width: 100%
+    input[name='eventName'],
+    input[name='notifyBefore']
+      padding: 15px 10px
+      @media screen and (min-width: 992px)
+        padding: 0 10px
+    span
+      position: absolute
+      top: 100%
+      transform: translateY(6px)
+      color: #ff0022
+  .submitBtn
+    background: #377dff
+    border: 1px solid #377dff
+    border-radius: 5px
+    color: #fff
+    transition: .3s ease
+    padding: 15px 20px
+    @media screen and (min-width: 992px)
+      padding: 0 20px
+    &:hover
+      background: #fff
+      color: #377dff
