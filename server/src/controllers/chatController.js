@@ -15,13 +15,13 @@ module.exports.addMessage = async (req, res, next) => {
     const newConversation = await Conversation.findOneAndUpdate({
       participants,
     },
-    { participants, blackList: [false, false], favoriteList: [false, false] },
-    {
-      upsert: true,
-      new: true,
-      setDefaultsOnInsert: true,
-      useFindAndModify: false,
-    });
+      { participants, blackList: [false, false], favoriteList: [false, false] },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+        useFindAndModify: false,
+      });
     const message = new Message({
       sender: req.tokenData.userId,
       body: req.body.messageBody,
@@ -30,7 +30,7 @@ module.exports.addMessage = async (req, res, next) => {
     await message.save();
     message._doc.participants = participants;
     const interlocutorId = participants.filter(
-      (participant) => participant !== req.tokenData.userId)[ 0 ];
+      (participant) => participant !== req.tokenData.userId)[0];
     const preview = {
       _id: newConversation._id,
       sender: req.tokenData.userId,
@@ -186,10 +186,10 @@ module.exports.blackList = async (req, res, next) => {
   try {
     const chat = await Conversation.findOneAndUpdate(
       { participants: req.body.participants },
-      { $set: { [ predicate ]: req.body.blackListFlag } }, { new: true });
+      { $set: { [predicate]: req.body.blackListFlag } }, { new: true });
     res.send(chat);
     const interlocutorId = req.body.participants.filter(
-      (participant) => participant !== req.tokenData.userId)[ 0 ];
+      (participant) => participant !== req.tokenData.userId)[0];
     controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
   } catch (err) {
     res.send(err);
@@ -202,7 +202,7 @@ module.exports.favoriteChat = async (req, res, next) => {
   try {
     const chat = await Conversation.findOneAndUpdate(
       { participants: req.body.participants },
-      { $set: { [ predicate ]: req.body.favoriteFlag } }, { new: true });
+      { $set: { [predicate]: req.body.favoriteFlag } }, { new: true });
     res.send(chat);
   } catch (err) {
     res.send(err);
@@ -286,3 +286,18 @@ module.exports.getCatalogs = async (req, res, next) => {
     next(err);
   }
 };
+
+const getCountMessagesByText = async () => {
+  try {
+    const records = await Message.aggregate([
+      { $match: { body: /паровоз/i } },
+      { $count: "locomotive" }
+    ]);
+
+    console.log(`Number of records by word "паровоз" - ${records[0].locomotive}`);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+getCountMessagesByText();
