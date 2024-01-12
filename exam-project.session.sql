@@ -10,3 +10,18 @@ FROM (
 SELECT role, count(*) 
 FROM "Users" 
 GROUP BY role;
+
+
+-- Task 10. Get cashback
+WITH customer_orders AS (
+    SELECT c."userId", SUM(c.prize) * 0.10 AS cashback
+    FROM "Contests" c
+    JOIN "Users" u ON c."userId" = u.id
+    WHERE u.role = 'customer' AND
+          c."createdAt" >= '2023-12-25' AND c."createdAt" <= '2024-01-14'
+    GROUP BY c."userId"
+)
+UPDATE "Users"
+SET balance = balance + co.cashback
+FROM customer_orders co
+WHERE "Users".id = co."userId";
