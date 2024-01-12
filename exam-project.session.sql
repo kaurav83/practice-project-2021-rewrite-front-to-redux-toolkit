@@ -25,3 +25,14 @@ UPDATE "Users"
 SET balance = balance + co.cashback
 FROM customer_orders co
 WHERE "Users".id = co."userId";
+
+-- Task 11. Pay three creators money
+UPDATE "Users"
+SET balance = balance + 10
+WHERE id IN (
+    SELECT id
+    FROM "Users"
+    WHERE role = 'creator'
+    ORDER BY rating DESC
+    LIMIT 3
+);
