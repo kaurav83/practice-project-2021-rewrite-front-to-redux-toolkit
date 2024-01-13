@@ -1,10 +1,10 @@
 const Conversation = require('../models/mongoModels/conversation');
 const Message = require('../models/mongoModels/Message');
 const Catalog = require('../models/mongoModels/Catalog');
-const moment = require('moment');
 const { User } = require('../models');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
+const loggerError = require('../loggerError/loggerError');
 const _ = require('lodash');
 
 module.exports.addMessage = async (req, res, next) => {
@@ -66,6 +66,7 @@ module.exports.addMessage = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -111,6 +112,7 @@ module.exports.getChat = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -177,6 +179,7 @@ module.exports.getPreview = async (req, res, next) => {
     res.send(conversations);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -193,6 +196,7 @@ module.exports.blackList = async (req, res, next) => {
     controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
   } catch (err) {
     res.send(err);
+    loggerError(err)
   }
 };
 
@@ -206,6 +210,7 @@ module.exports.favoriteChat = async (req, res, next) => {
     res.send(chat);
   } catch (err) {
     res.send(err);
+    loggerError(err)
   }
 };
 
@@ -220,6 +225,7 @@ module.exports.createCatalog = async (req, res, next) => {
     res.send(catalog);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -232,6 +238,7 @@ module.exports.updateNameCatalog = async (req, res, next) => {
     res.send(catalog);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -244,6 +251,7 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
     res.send(catalog);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -256,6 +264,7 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
     res.send(catalog);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -266,6 +275,7 @@ module.exports.deleteCatalog = async (req, res, next) => {
     res.end();
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -284,6 +294,7 @@ module.exports.getCatalogs = async (req, res, next) => {
     res.send(catalogs);
   } catch (err) {
     next(err);
+    loggerError(err)
   }
 };
 
@@ -297,6 +308,7 @@ const getCountMessagesByText = async () => {
     console.log(`Number of records by word "паровоз" - ${records[0].locomotive}`);
   } catch (err) {
     console.log(err);
+    loggerError(err)
   }
 };
 

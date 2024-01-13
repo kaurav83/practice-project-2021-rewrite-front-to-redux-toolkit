@@ -5,6 +5,7 @@ const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
+const loggerError = require('../loggerError/loggerError');
 
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
@@ -32,6 +33,7 @@ module.exports.dataForContest = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     next(new ServerError('cannot get contest preferences'));
+    loggerError(err);
   }
 };
 
@@ -95,6 +97,7 @@ module.exports.getContestById = async (req, res, next) => {
     res.send(contestInfo);
   } catch (e) {
     next(new ServerError());
+    loggerError(e);
   }
 };
 
@@ -118,6 +121,7 @@ module.exports.updateContest = async (req, res, next) => {
     res.send(updatedContest);
   } catch (e) {
     next(e);
+    loggerError(e);
   }
 };
 
@@ -140,6 +144,7 @@ module.exports.setNewOffer = async (req, res, next) => {
     const User = Object.assign({}, req.tokenData, { id: req.tokenData.userId });
     res.send(Object.assign({}, result, { User }));
   } catch (e) {
+    loggerError(e);
     return next(new ServerError());
   }
 };
@@ -210,6 +215,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
     } catch (err) {
       transaction.rollback();
       next(err);
+      loggerError(err);
     }
   }
 };
@@ -237,7 +243,10 @@ module.exports.getCustomersContests = async (req, res, next) => {
       }
       res.send({ contests, haveMore });
     })
-    .catch(err => next(new ServerError(err)));
+    .catch(err => {
+      loggerError(err);
+      next(new ServerError(err))
+    });
 };
 
 module.exports.getContests = async (req, res, next) => {
@@ -267,6 +276,7 @@ module.exports.getContests = async (req, res, next) => {
       res.send({ contests, haveMore });
     })
     .catch(err => {
+      loggerError(err);
       next(new ServerError());
     });
 };

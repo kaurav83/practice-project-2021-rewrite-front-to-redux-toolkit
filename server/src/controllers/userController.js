@@ -9,6 +9,7 @@ const controller = require('../socketInit');
 const userQueries = require('./queries/userQueries');
 const bankQueries = require('./queries/bankQueries');
 const ratingQueries = require('./queries/ratingQueries');
+const loggerError = require('../loggerError/loggerError');
 
 module.exports.login = async (req, res, next) => {
   try {
@@ -29,6 +30,7 @@ module.exports.login = async (req, res, next) => {
     res.send({ token: accessToken });
   } catch (err) {
     next(err);
+    loggerError(err);
   }
 };
 module.exports.registration = async (req, res, next) => {
@@ -49,6 +51,7 @@ module.exports.registration = async (req, res, next) => {
     await userQueries.updateUser({ accessToken }, newUser.id);
     res.send({ token: accessToken });
   } catch (err) {
+    loggerError(err);
     if (err.name === 'SequelizeUniqueConstraintError') {
       next(new NotUniqueEmail());
     } else {
@@ -101,6 +104,7 @@ module.exports.changeMark = async (req, res, next) => {
   } catch (err) {
     transaction.rollback();
     next(err);
+    loggerError(err);
   }
 };
 
@@ -148,6 +152,7 @@ module.exports.payment = async (req, res, next) => {
     transaction.commit();
     res.send();
   } catch (err) {
+    loggerError(err);
     transaction.rollback();
     next(new ServerError());
   }
@@ -171,6 +176,7 @@ module.exports.updateUser = async (req, res, next) => {
       id: updatedUser.id,
     });
   } catch (err) {
+    loggerError(err);
     next(err);
   }
 };
@@ -204,6 +210,7 @@ module.exports.cashout = async (req, res, next) => {
     transaction.commit();
     res.send({ balance: updatedUser.balance });
   } catch (err) {
+    loggerError(err);
     transaction.rollback();
     next(err);
   }
