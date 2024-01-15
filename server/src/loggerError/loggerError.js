@@ -18,6 +18,7 @@ const copyAndTransformLog = () => {
       .filter(line => line)
       .map(line => {
         const error = JSON.parse(line);
+
         return JSON.stringify({
           message: error.message,
           code: error.code,
@@ -25,7 +26,7 @@ const copyAndTransformLog = () => {
         });
       }).join('\n');
 
-    const newFileName = `error_${Date.now()}.log`;
+      const newFileName = `error_${new Date().toISOString().split('T')[0]}.log`;
     fs.writeFileSync(newFileName, transformedContent);
     fs.writeFileSync('error.log', '');
   }
