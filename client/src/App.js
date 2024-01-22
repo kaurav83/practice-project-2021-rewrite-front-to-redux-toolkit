@@ -16,6 +16,7 @@ import { UserProfileLazy } from './pages/UserProfile/UserProfile.lazy';
 import { ContestCreationPageLazy } from './pages/ContestCreation/ContestCreationPage.lazy';
 import { HowItWorksPageLazy } from './pages/HowItWorksPage/HowItWorksPage.lazy';
 import { EventsPageLazy } from './pages/EventsPage/EventsPage.lazy';
+import { ModerateOffersPageLazy } from './pages/ModerateOffersPage/ModerateOffersPage.lazy';
 import OnlyNotAuthorizedUserHoc from './components/OnlyNotAuthorizedUserHoc/OnlyNotAuthorizedUserHoc';
 import PrivateHoc from './components/PrivateHoc/PrivateHoc';
 import NotFound from './components/NotFound/NotFound';
@@ -42,9 +43,23 @@ const App = () => (
       <Switch>
         <Route exact path='/' component={HomeLazy} />
 
-        <Route exact path='/how-it-works' component={HowItWorksPageLazy} />
+        <Route 
+          exact
+          path='/how-it-works'
+          component={HowItWorksPageLazy}
+        />
 
-        <Route exact path='/events' component={EventsPageLazy} />
+        <Route
+          exact
+          path='/events'
+          component={EventsPageLazy}
+        />
+
+        <Route
+          exact
+          path='/moderate-offers'
+          component={PrivateHoc(ModerateOffersPageLazy)} 
+        />
 
         <Route
           exact

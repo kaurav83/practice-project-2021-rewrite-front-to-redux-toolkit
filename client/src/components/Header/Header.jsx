@@ -56,14 +56,16 @@ const Header = ({ history }) => {
             />
 
             <ul>
-              <li>
-                <Link
-                  to="/dashboard"
-                  className={styles.topMenuLink}
-                >
-                  <span>View Dashboard</span>
-                </Link>
-              </li>
+              {data.role !== CONSTANTS.MODERATOR && (
+                <li>
+                  <Link
+                    to="/dashboard"
+                    className={styles.topMenuLink}
+                  >
+                    <span>View Dashboard</span>
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   to="/account"
@@ -88,14 +90,16 @@ const Header = ({ history }) => {
                   <span>Affiliate Dashboard</span>
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/events"
-                  className={styles.topMenuLink}
-                >
-                  <span>Events</span>
-                </Link>
-              </li>
+              {data.role !== CONSTANTS.MODERATOR && (
+                <li>
+                  <Link
+                    to="/events"
+                    className={styles.topMenuLink}
+                  >
+                    <span>Events</span>
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link to="/how-it-works">
                   <span>
@@ -103,6 +107,15 @@ const Header = ({ history }) => {
                   </span>
                 </Link>
               </li>
+              {data.role === CONSTANTS.MODERATOR && (
+                <li>
+                  <Link to="/moderate-offers">
+                    <span>
+                      Moderate offers
+                    </span>
+                  </Link>
+                </li>
+              )}
               <li>
                 <span
                   onClick={logOut}
@@ -309,7 +322,7 @@ const Header = ({ history }) => {
               </li>
             </ul>
           </div>
-          {data && data.role !== CONSTANTS.CREATOR && (
+          {data && data.role === CONSTANTS.CUSTOMER && (
             <div
               className={styles.startContestBtn}
               onClick={startContests}

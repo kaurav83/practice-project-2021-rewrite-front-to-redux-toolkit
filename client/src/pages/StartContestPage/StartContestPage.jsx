@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { CONSTANTS } from '../../constants';
@@ -15,9 +15,11 @@ const StartContestPage = props => {
   const dispatch = useDispatch();
   const userStore = useSelector((state) => state.userStore);
 
-  if (userStore.data?.role !== CONSTANTS.CUSTOMER) {
-    props.history.replace('/');
-  }
+  useEffect(() => {
+    if (userStore.data?.role !== CONSTANTS.CUSTOMER) {
+      props.history.replace('/');
+    }
+  }, [userStore, props]);
 
   const setBundle = useCallback((bundleStr) => {
     const array = bundleStr.toLowerCase().split('+');

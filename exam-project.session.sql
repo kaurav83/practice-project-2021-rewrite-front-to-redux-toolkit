@@ -36,3 +36,6 @@ WHERE id IN (
     ORDER BY rating DESC
     LIMIT 3
 );
+
+-- Task 14. Add new role moderator
+ALTER TYPE "enum_Users_role" ADD VALUE 'moderator'; 

@@ -36,6 +36,7 @@ const Home = () => {
   return (
     <>
       <Header />
+
       {isFetching ? (
         <div className={styles.spinner}>
           <Spinner />
@@ -57,7 +58,7 @@ const Home = () => {
                 for immediate purchase
               </p>
 
-              {data && (
+              {data && data.role !== CONSTANTS.MODERATOR  && (
                 <div className={styles.button}>
                   <Link className={styles.button__link} to='/dashboard'>
                     DASHBOARD

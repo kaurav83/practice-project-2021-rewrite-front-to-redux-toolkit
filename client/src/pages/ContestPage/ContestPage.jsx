@@ -54,9 +54,14 @@ const ContestPage = (props) => {
     return () => dispatch(changeEditContest(false));
     // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
     if (!userStore.data) {
       props.history.push('/login');
+    }
+
+    if (userStore.data?.role === CONSTANTS.MODERATOR) {
+      props.history.push('/');
     }
   }, [userStore.data, props]);
 
@@ -218,7 +223,6 @@ const ContestPage = (props) => {
 
   return (
     <div>
-      {/* <Chat/> */}
       {isShowOnFull && (
         <LightBox
           mainSrc={`${CONSTANTS.publicURL}${imagePath}`}
