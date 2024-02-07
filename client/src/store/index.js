@@ -13,6 +13,7 @@ import bundleReducer from './slices/bundleSlice';
 import contestByIdReducer from './slices/contestByIdSlice';
 import contestUpdationReducer from './slices/contestUpdationSlice';
 import chatReducer from './slices/chatSlice';
+import usersWithOffersReducer from './slices/usersWithOffersSlice';
 
 export const createReduxStore = (initialState, asyncReducers) => {
   const rootReducers = {
@@ -27,6 +28,7 @@ export const createReduxStore = (initialState, asyncReducers) => {
     bundleStore: bundleReducer,
     contestUpdationStore: contestUpdationReducer,
     chatStore: chatReducer,
+    usersWithOffers: usersWithOffersReducer,
   };
 
   const reducerManager = createReducerManager(rootReducers);

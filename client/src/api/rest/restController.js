@@ -61,3 +61,11 @@ export const getContestById = data =>
       contestId: data.contestId,
     },
   });
+
+export const getUsersWithOffers = (page) => 
+  http.post('getUsersWithOffers', {
+    page,
+  });
+
+export const getContestsWithoutPagination = () =>
+  http.get('getContestsWithoutPagination');

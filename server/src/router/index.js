@@ -53,6 +53,17 @@ router.get(
 );
 
 router.post(
+  '/getUsersWithOffers',
+  checkToken.checkToken,
+  contestController.getUsersWithOffers,
+);
+
+router.get(
+  '/getContestsWithoutPagination',
+  contestController.getContestsWithoutPagination,
+);
+
+router.post(
   '/getAllContests',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,

@@ -41,7 +41,7 @@ const ContestBox = props => {
   const ucFirstLetter = string =>
     string.charAt(0).toUpperCase() + string.slice(1);
 
-  const { id, title, contestType, prize, count } = props.data;
+  const { id, title, contestType, prize, Offers } = props.data;
 
   return (
     <div
@@ -99,7 +99,9 @@ const ContestBox = props => {
               alt='logo'
             />
 
-            <span>{count}</span>
+            <span>
+              {Offers.filter((offer) => offer.status === 'won').length}
+            </span>
           </div>
 
           <span>Entries</span>

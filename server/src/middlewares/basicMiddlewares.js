@@ -80,7 +80,6 @@ module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
   try {
     const result = await Contest.findOne({
       where: {
-        userId: req.tokenData.userId,
         id: req.body.contestId,
         status: CONSTANTS.CONTEST_STATUS_ACTIVE,
       },

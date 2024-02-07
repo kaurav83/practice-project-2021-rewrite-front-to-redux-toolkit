@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { CONSTANTS } from '../../constants';
 
 import Header from '../../components/Header/Header';
+import ModerateOffers from '../../components/ModerateOffers/ModerateOffers';
 
 const ModerateOffersPage = (props) => {
   const { data } = useSelector((state) => state.userStore);
@@ -18,7 +19,7 @@ const ModerateOffersPage = (props) => {
     <>
       <Header/>
       
-      Moderate Offers Page
+      <ModerateOffers />
     </>
   )
 };

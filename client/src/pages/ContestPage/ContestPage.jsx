@@ -8,7 +8,6 @@ import { CONSTANTS } from '../../constants';
 import { goToExpandedDialog } from '../../store/slices/chatSlice';
 import {
   getContestById,
-  setOfferStatus,
   clearSetOfferStatusError,
   changeEditContest,
   changeContestViewMode,
@@ -42,6 +41,7 @@ const ContestPage = (props) => {
   const { messagesPreview } = useSelector((state) => state.chatStore);
   const userStore = useSelector((state) => state.userStore);
   const role = userStore?.data?.role;
+  const filteredOffers = offers.filter((offer) => offer.status === 'won');
 
   const getDataContest = () => {
     const { params } = props.match;
@@ -68,13 +68,11 @@ const ContestPage = (props) => {
   const setOffersList = () => {
     const array = [];
 
-    for (let i = 0; i < offers.length; i++) {
+    for (let i = 0; i < filteredOffers.length; i++) {
       array.push(
         <OfferBox
-          data={offers[i]}
-          key={offers[i].id}
-          needButtons={needButtons}
-          setOfferStatus={setOfferStatusContest}
+          data={filteredOffers[i]}
+          key={filteredOffers[i].id}
           contestType={contestData.contestType}
           date={new Date()}
         />
@@ -88,32 +86,6 @@ const ContestPage = (props) => {
           There is no suggestion at this moment
         </div>
       );
-  };
-
-  const needButtons = (offerStatus) => {
-    const contestCreatorId = contestData.User.id;
-    const userId = userStore.data.id;
-    const contestStatus = contestData.status;
-
-    return (
-      contestCreatorId === userId &&
-      contestStatus === CONSTANTS.CONTEST_STATUS_ACTIVE &&
-      offerStatus === CONSTANTS.OFFER_STATUS_PENDING
-    );
-  };
-
-  const setOfferStatusContest = (creatorId, offerId, command) => {
-    dispatch(clearSetOfferStatusError());
-    const { id, orderId, priority } = contestData;
-    const obj = {
-      command,
-      offerId,
-      creatorId,
-      orderId,
-      priority,
-      contestId: id,
-    };
-    dispatch(setOfferStatus(obj));
   };
 
   const findConversationInfo = (interlocutorId) => {
@@ -215,7 +187,7 @@ const ContestPage = (props) => {
 
         <ContestSideBar
           contestData={contestData}
-          totalEntries={offers.length}
+          totalEntries={filteredOffers.length}
         />
       </div>
     );

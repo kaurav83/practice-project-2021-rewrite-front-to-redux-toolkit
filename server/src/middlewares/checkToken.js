@@ -28,6 +28,7 @@ module.exports.checkAuth = async (req, res, next) => {
 
 module.exports.checkToken = async (req, res, next) => {
   const accessToken = req.headers.authorization;
+
   if (!accessToken) {
     return next(new TokenError('need token'));
   }

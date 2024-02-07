@@ -1,5 +1,5 @@
-const {Select, Rating, Contest, Offer, User, Sequelize, sequelize} = require('../models');
-const ServerError =require('../errors/ServerError');
+const { Select, Rating, Contest, Offer, User, Sequelize, sequelize } = require('../models');
+const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
@@ -16,7 +16,7 @@ module.exports.dataForContest = async (req, res, next) => {
     const characteristics = await Select.findAll({
       where: {
         type: {
-          [ Sequelize.Op.or ]: types,
+          [Sequelize.Op.or]: types,
         },
       },
     });
@@ -24,10 +24,10 @@ module.exports.dataForContest = async (req, res, next) => {
       return next(new ServerError());
     }
     characteristics.forEach(characteristic => {
-      if (!response[ characteristic.type ]) {
-        response[ characteristic.type ] = [];
+      if (!response[characteristic.type]) {
+        response[characteristic.type] = [];
       }
-      response[ characteristic.type ].push(characteristic.describe);
+      response[characteristic.type].push(characteristic.describe);
     });
     res.send(response);
   } catch (err) {
@@ -101,6 +101,82 @@ module.exports.getContestById = async (req, res, next) => {
   }
 };
 
+module.exports.getUsersWithOffers = async (req, res, next) => {
+  const page = 1;
+  const itemsPerPage = 10;
+
+  await User.findAndCountAll({
+    attributes: [
+      ['id', 'user_id'],
+      'displayName',
+      'email'
+    ],
+    include: [{
+      model: Offer,
+      attributes: [
+        ['id', 'offer_id'],
+        'contestId',
+        'text',
+        'status'
+      ],
+      required: true
+    }],
+    offset: (req.body.page - 1) * itemsPerPage,
+    limit: itemsPerPage,
+    subQuery: false,
+  })
+    .then(result => {
+      const count = result.count;
+      const users = result.rows || [];
+
+      const formattedData = users.reduce((acc, user) => {
+        user.Offers.forEach(offer => {
+          acc.push({
+            offer_id: offer.dataValues.offer_id,
+            text: offer.text,
+            status: offer.status,
+            user_id: user.dataValues.user_id,
+            displayName: user.displayName,
+            email: user.email,
+            contestId: offer.contestId,
+          });
+        });
+        return acc;
+      }, []);
+
+      const totalPages = Math.ceil(count / itemsPerPage);
+
+      res.send({
+        formattedData,
+        page: req.body.page,
+        itemsPerPage,
+        totalPages,
+        totalCount: count
+      });
+    })
+    .catch(error => {
+      next(new ServerError());
+      loggerError(error);
+    });
+};
+
+module.exports.getContestsWithoutPagination = async (req, res, next) => {
+  await Contest.findAll({
+    attributes: [
+      'id',
+      'priority',
+      'orderId'
+    ],
+  })
+    .then((contests) => {
+      res.send(contests);
+    })
+    .catch(error => {
+      next(new ServerError());
+      loggerError(error);
+    });
+}
+
 module.exports.downloadFile = async (req, res, next) => {
   const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
   res.download(file);
@@ -161,10 +237,10 @@ const resolveOffer = async (
   contestId, creatorId, orderId, offerId, priority, transaction) => {
   const finishedContest = await contestQueries.updateContestStatus({
     status: sequelize.literal(`   CASE
-            WHEN "id"=${ contestId }  AND "orderId"='${ orderId }' THEN '${ CONSTANTS.CONTEST_STATUS_FINISHED }'
-            WHEN "orderId"='${ orderId }' AND "priority"=${ priority +
-    1 }  THEN '${ CONSTANTS.CONTEST_STATUS_ACTIVE }'
-            ELSE '${ CONSTANTS.CONTEST_STATUS_PENDING }'
+            WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'
+            WHEN "orderId"='${orderId}' AND "priority"=${priority +
+      1}  THEN '${CONSTANTS.CONTEST_STATUS_ACTIVE}'
+            ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
             END
     `),
   }, { orderId }, transaction);
@@ -173,8 +249,8 @@ const resolveOffer = async (
     creatorId, transaction);
   const updatedOffers = await contestQueries.updateOfferStatus({
     status: sequelize.literal(` CASE
-            WHEN "id"=${ offerId } THEN '${ CONSTANTS.OFFER_STATUS_WON }'
-            ELSE '${ CONSTANTS.OFFER_STATUS_REJECTED }'
+            WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
+            ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
             END
     `),
   }, {
@@ -188,24 +264,16 @@ const resolveOffer = async (
       arrayRoomsId.push(offer.userId);
     }
   });
-  controller.getNotificationController().emitChangeOfferStatus(arrayRoomsId,
-    'Someone of yours offers was rejected', contestId);
+
   controller.getNotificationController().emitChangeOfferStatus(creatorId,
     'Someone of your offers WIN', contestId);
-  return updatedOffers[ 0 ].dataValues;
+  return updatedOffers[0].dataValues;
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
   let transaction;
-  if (req.body.command === 'reject') {
-    try {
-      const offer = await rejectOffer(req.body.offerId, req.body.creatorId,
-        req.body.contestId);
-      res.send(offer);
-    } catch (err) {
-      next(err);
-    }
-  } else if (req.body.command === 'resolve') {
+
+  if (req.body.command === 'resolve') {
     try {
       transaction = await sequelize.transaction();
       const winningOffer = await resolveOffer(req.body.contestId,
@@ -216,6 +284,14 @@ module.exports.setOfferStatus = async (req, res, next) => {
       transaction.rollback();
       next(err);
       loggerError(err);
+    }
+  } else if (req.body.command === 'reject') {
+    try {
+      const offer = await rejectOffer(req.body.offerId, req.body.creatorId,
+        req.body.contestId);
+      res.send(offer);
+    } catch (err) {
+      next(err);
     }
   }
 };
@@ -230,7 +306,7 @@ module.exports.getCustomersContests = async (req, res, next) => {
       {
         model: Offer,
         required: false,
-        attributes: ['id'],
+        attributes: ['id', 'status'],
       },
     ],
   })
@@ -252,7 +328,7 @@ module.exports.getCustomersContests = async (req, res, next) => {
 module.exports.getContests = async (req, res, next) => {
   const predicates = UtilFunctions.createWhereForAllContests(req.body.typeIndex,
     req.body.contestId, req.body.industry, req.body.awardSort);
-    await Contest.findAll({
+  await Contest.findAll({
     where: predicates.where,
     order: predicates.order,
     limit: req.body.limit,
@@ -262,7 +338,7 @@ module.exports.getContests = async (req, res, next) => {
         model: Offer,
         required: req.body.ownEntries,
         where: req.body.ownEntries ? { userId: req.tokenData.userId } : {},
-        attributes: ['id'],
+        attributes: ['id', 'status'],
       },
     ],
   })

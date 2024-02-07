@@ -1,0 +1,92 @@
+.moderateOffers
+  max-width: 1188px
+  margin: 0 auto
+  margin-top: 50px
+  padding: 16px
+
+  .tableWrapper
+    height: 540px
+    overflow-x: auto
+
+  table
+    width: 100%
+    border-collapse: collapse
+    position: relative
+    border-collapse: collapse
+    white-space: nowrap
+
+  thead tr th
+    font-weight: 500
+    text-align: left
+    background-color: #eee
+
+  tbody tr:nth-child(even)
+    background-color: #eee
+
+  th,
+  td
+    padding: 15px
+    overflow-wrap: break-word
+
+  .paginationOffers
+    margin-top: 50px
+
+  .emailLink
+    color: #337ab7
+
+  .btnsContainer
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 20px
+
+  .resolveBtn
+    background-color: #8aca6b
+    border-color: #8aca6b
+    color: white
+    border-radius: 8px
+    &:hover
+      background-color: rgba(138, 202, 107, 0.7)
+      border-color: rgba(138, 202, 107, 0.7)
+
+  .rejectBtn
+    background-color: #CD5C5C
+    color: white
+    border-color: #CD5C5C
+    border-radius: 8px
+    &:hover
+      background-color: rgba(205, 92, 92, 0.7)
+      border-color: rgba(205, 92, 92, 0.7)
+
+.alternativeContent
+  font-size: 24px
+  color: #337ab7
+  text-align: center
+  margin-top: 50px
+
+.moderateSpinner
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.modalContainer
+  background: #fff
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  padding: 40px
+  border-radius: 5px
+  display: grid
+  gap: 30px
+
+  .modalText
+    font-size: 24px
+  
+  .modalButtonGroup
+    margin: 0 auto
+    display: flex
+    gap: 20px
+
+  .modalBtn
+    padding: 5px 20px

@@ -4,7 +4,6 @@ import Rating from 'react-rating';
 import { withRouter } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import { confirmAlert } from 'react-confirm-alert';
 
 import { goToExpandedDialog } from '../../store/slices/chatSlice';
 import {
@@ -15,8 +14,6 @@ import {
 import { CONSTANTS } from '../../constants';
 
 import styles from './OfferBox.module.sass';
-import 'react-confirm-alert/src/react-confirm-alert.css';
-import './confirmStyle.css';
 
 const OfferBox = (props) => {
   const { data, contestType } = props;
@@ -51,40 +48,6 @@ const OfferBox = (props) => {
     }
 
     return null;
-  };
-
-  const resolveOffer = (id) => {
-    confirmAlert({
-      title: 'confirm',
-      message: 'Are u sure?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(data.User.id, id, 'resolve'),
-        },
-        {
-          label: 'No',
-        },
-      ],
-    });
-  };
-
-  const rejectOffer = (id) => {
-    confirmAlert({
-      title: 'confirm',
-      message: 'Are u sure?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(data.User.id, id, 'reject'),
-        },
-        {
-          label: 'No',
-        },
-      ],
-    });
   };
 
   const changeMarkCallback = (value) => {
@@ -232,18 +195,6 @@ const OfferBox = (props) => {
           <i onClick={goChat} className="fas fa-comments" />
         )}
       </div>
-
-      {props.needButtons(data.status) && (
-        <div className={styles.btnsContainer}>
-          <div onClick={() => resolveOffer(data.id)} className={styles.resolveBtn}>
-            Resolve
-          </div>
-
-          <div onClick={() => rejectOffer(data.id)} className={styles.rejectBtn}>
-            Reject
-          </div>
-        </div>
-      )}
     </div>
   );
 };
