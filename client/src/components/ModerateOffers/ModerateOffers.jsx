@@ -16,7 +16,6 @@ const ModerateOffers = () => {
   const dispatch = useDispatch();
 
   const {
-    error,
     isFetching,
     offers,
     contests,
@@ -27,7 +26,7 @@ const ModerateOffers = () => {
     dispatch(getContestsWithoutPagination());
   }, [dispatch]);
 
-  const setOfferStatusContest = async (creatorId, offerId, command, contestId) => {
+  const setOfferStatusContest = async (creatorId, offerId, command, contestId, email) => {
     const { orderId, priority } = contests.find((contest) => contest.id === contestId);
 
     const obj = {
@@ -37,6 +36,7 @@ const ModerateOffers = () => {
       orderId,
       priority,
       contestId,
+      email,
     };
     await dispatch(setOfferStatus(obj));
     await dispatch(getUsersWithOffers(offers.page));

@@ -1,4 +1,3 @@
-import React from "react";
 import { useMemo } from "react";
 
 export const DOTS = "...";
@@ -59,7 +58,7 @@ export const usePagination = ({
       let middleRange = range(leftSiblingIndex, rightSiblingIndex);
       return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
     }
-  }, [totalCount, pageSize, siblingCount, currentPage]);
+  }, [totalCount, pageSize, siblingCount, currentPage, totalPages]);
 
   return paginationRange;
 };

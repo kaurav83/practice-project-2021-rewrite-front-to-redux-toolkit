@@ -41,7 +41,9 @@ const Offer = ({ offer, setOfferStatus }) => {
         </a>
       </td>
 
-      <td>{text}</td>
+      <td>
+        {text}
+      </td>
 
       <td>{status}</td>
 
@@ -65,7 +67,7 @@ const Offer = ({ offer, setOfferStatus }) => {
 
                   <div className={styles.modalButtonGroup}>
                     <button
-                      onClick={() => setOfferStatus(user_id, offer_id, statusOffer, contestId)}
+                      onClick={() => setOfferStatus(user_id, offer_id, statusOffer, contestId, email)}
                       className={styles.modalBtn}  
                     >
                       Yes

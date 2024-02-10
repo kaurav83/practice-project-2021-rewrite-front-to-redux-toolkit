@@ -6,6 +6,7 @@ const controller = require('../socketInit');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
 const loggerError = require('../loggerError/loggerError');
+const { sendEmail } = require('../utils/sendMail');
 
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
@@ -279,6 +280,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
       const winningOffer = await resolveOffer(req.body.contestId,
         req.body.creatorId, req.body.orderId, req.body.offerId,
         req.body.priority, transaction);
+      await sendEmail(req.body.email, req.body.command, req.body.offerId);
       res.send(winningOffer);
     } catch (err) {
       transaction.rollback();
@@ -289,6 +291,8 @@ module.exports.setOfferStatus = async (req, res, next) => {
     try {
       const offer = await rejectOffer(req.body.offerId, req.body.creatorId,
         req.body.contestId);
+
+      await sendEmail(req.body.email, req.body.command, req.body.offerId);
       res.send(offer);
     } catch (err) {
       next(err);
