@@ -56,7 +56,7 @@ const ModerateOffers = () => {
     )
   }
 
-  if (!offers) {
+  if (!offers || !offers.formattedData.length) {
     return (
       <p className={styles.alternativeContent}>
         There's no offsers yet.
