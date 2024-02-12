@@ -66,51 +66,47 @@ const ModerateOffers = () => {
 
   return (
     <div className={styles.moderateOffers}>
-      {!!offers && (
-        <div className={styles.tableWrapper}>
-          <table>
-            <thead>
-              <tr>
-                <th>OrderId</th>
+      <div className={styles.tableWrapper}>
+        <table>
+          <thead>
+            <tr>
+              <th>OrderId</th>
 
-                <th>Display name</th>
+              <th>Display name</th>
 
-                <th>Email</th>
+              <th>Email</th>
 
-                <th>Message</th>
+              <th>Message</th>
 
-                <th>Status</th>
+              <th>Status</th>
 
-                <th>Set status</th>
-              </tr>
-            </thead>
+              <th>Set status</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {offers.formattedData.map((offer) => {
-                return (
-                  <Offer
-                    offer={offer}
-                    key={offer.offer_id}
-                    setOfferStatus={setOfferStatusContest}
-                  />
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+          <tbody>
+            {offers.formattedData.map((offer) => {
+              return (
+                <Offer
+                  offer={offer}
+                  key={offer.offer_id}
+                  setOfferStatus={setOfferStatusContest}
+                />
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
 
-      {!!offers && (
-        <div className={styles.paginationOffers}>
-          <Pagination
-            currentPage={offers.page}
-            totalCount={offers.totalCount}
-            pageSize={offers.itemsPerPage}
-            onPageChange={(page) => handleChangePage(page)}
-            totalPages={offers.totalPages}
-          />
-        </div>
-      )}
+      <div className={styles.paginationOffers}>
+        <Pagination
+          currentPage={offers.page}
+          totalCount={offers.totalCount}
+          pageSize={offers.itemsPerPage}
+          onPageChange={(page) => handleChangePage(page)}
+          totalPages={offers.totalPages}
+        />
+      </div>
     </div>
   )
 };
