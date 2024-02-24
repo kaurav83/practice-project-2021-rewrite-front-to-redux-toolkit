@@ -23,7 +23,7 @@ CREATE TABLE conversations (
     updated_at TIMESTAMP NOT NULL
 );
 
-INSERT INTO conversations (created_at, updated_at) VALUES ('2023-11-24 20:09:51.978', '2024-01-05 09:51:39.895');
+INSERT INTO conversations (created_at, updated_at) VALUES ('2024-01-24 20:09:51.978', '2024-02-05 09:51:39.895');
 
 CREATE TABLE conversation_participants (
     conversation_id INTEGER REFERENCES conversations(id),
@@ -32,9 +32,12 @@ CREATE TABLE conversation_participants (
     favorited BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (conversation_id, participant_id)
 );
+ALTER TABLE conversation_participants
+ADD CONSTRAINT fk_participant_id
+FOREIGN KEY (participant_id) REFERENCES "Users"(id);
 
 INSERT INTO conversation_participants (conversation_id, participant_id, blacklisted, favorited) VALUES (1, 1, FALSE, FALSE);
-INSERT INTO conversation_participants (conversation_id, participant_id, blacklisted, favorited) VALUES (1, 3, FALSE, FALSE);
+INSERT INTO conversation_participants (conversation_id, participant_id, blacklisted, favorited) VALUES (2, 5, TRUE, FALSE);
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
