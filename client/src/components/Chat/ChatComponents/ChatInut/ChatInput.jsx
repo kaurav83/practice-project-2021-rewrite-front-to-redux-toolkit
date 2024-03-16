@@ -11,19 +11,32 @@ import styles from './ChatInput.module.sass';
 
 const ChatInput = () => {
   const dispatch = useDispatch();
-  const { interlocutor } = useSelector((state) => state.chatStore);
+  const { interlocutor, chatData } = useSelector((state) => state.chatStore);
+  const { id } = useSelector((state) => state.userStore.data);
 
   const submitHandler = useCallback((values, { resetForm }) => {
     if (values.message.trim()) {
-      dispatch(sendMessage({
-        messageBody: values.message.trim(),
-        recipient: interlocutor.id,
-        interlocutor: interlocutor,
-      }));
+      if (chatData) {
+        dispatch(sendMessage({
+          messageBody: values.message.trim(),
+          recipient: interlocutor.id,
+          userId: id,
+          interlocutor: interlocutor,
+          conversationId: chatData._id,
+          participants: chatData.participants,
+        }));
+      } else {
+        dispatch(sendMessage({
+          messageBody: values.message.trim(),
+          recipient: interlocutor.id,
+          userId: id,
+          interlocutor: interlocutor,
+        }));
+      }
     }
 
     resetForm();
-  }, [dispatch, interlocutor]);
+  }, [dispatch, interlocutor, chatData]);
 
   return (
     <div className={styles.inputContainer}>

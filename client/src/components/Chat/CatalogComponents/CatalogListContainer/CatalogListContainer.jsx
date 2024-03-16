@@ -41,7 +41,7 @@ const CatalogListContainer = () => {
         }
       }
     }
-    
+
     return dialogsInCatalog;
   };
 

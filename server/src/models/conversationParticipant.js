@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class ConversationParticipant extends Model {
     static associate(models) {
       ConversationParticipant.belongsTo(models.Conversation, { foreignKey: 'conversationId' });
+      ConversationParticipant.belongsTo(models.User, {foreignKey: 'participantId', as: 'userDetails'});
     }
   };
   ConversationParticipant.init({
@@ -33,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'ConversationParticipant',
     tableName: 'conversation_participants',
+    timestamps: false,
     underscored: true
   });
   return ConversationParticipant;

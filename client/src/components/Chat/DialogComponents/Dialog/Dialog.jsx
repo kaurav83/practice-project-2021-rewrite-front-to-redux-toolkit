@@ -58,7 +58,7 @@ const Dialog = ({ userId }) => {
 
       messagesArray.push(
         <div
-          key={message._id}
+          key={message.id}
           className={className(
             userId === message.sender ? styles.ownMessage : styles.message
           )}

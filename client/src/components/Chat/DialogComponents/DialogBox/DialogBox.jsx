@@ -76,6 +76,7 @@ const DialogBox = props => {
             onClick={event =>
               changeFavorite(
                 {
+                  conversationId: _id,
                   participants,
                   favoriteFlag: !isFavorite,
                 },
@@ -91,11 +92,12 @@ const DialogBox = props => {
           <i
             onClick={event =>
               changeBlackList(
+                event,
                 {
+                  conversationId: _id,
                   participants,
                   blackListFlag: !isBlocked,
-                },
-                event
+                }
               )
             }
             className={classNames({

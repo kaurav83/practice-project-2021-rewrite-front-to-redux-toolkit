@@ -21,7 +21,7 @@ const DialogList = ({ preview, userId, removeChat }) => {
     event.stopPropagation();
   }, [dispatch]);
 
-  const changeBlackList = useCallback((data, event) => {
+  const changeBlackList = useCallback((event, data) => {
     dispatch(changeChatBlock(data));
     event.stopPropagation();
   }, [dispatch]);
@@ -50,7 +50,7 @@ const DialogList = ({ preview, userId, removeChat }) => {
   const renderPreview = (filterFunc) => {
     const arrayList = [];
 
-    preview.forEach((chatPreview, index) => {
+    preview.map((chatPreview, index) => {
       const dialogNode = (
         <DialogBox
           interlocutor={chatPreview.interlocutor}

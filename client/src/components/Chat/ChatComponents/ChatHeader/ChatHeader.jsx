@@ -71,6 +71,7 @@ const ChatHeader = (props) => {
               onClick={(event) =>
                 changeFavorite(
                   {
+                    conversationId: chatData._id,
                     participants: chatData.participants,
                     favoriteFlag: !isFavorite(chatData, userId),
                   },
@@ -87,6 +88,7 @@ const ChatHeader = (props) => {
               onClick={(event) =>
                 changeBlackList(
                   {
+                    conversationId: chatData._id,
                     participants: chatData.participants,
                     blackListFlag: !isBlocked(chatData, userId),
                   },

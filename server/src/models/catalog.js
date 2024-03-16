@@ -5,7 +5,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Catalog extends Model {
     static associate({ CatalogConversation, User }) {
-      Catalog.hasMany(CatalogConversation, { foreignKey: 'catalogId' });
+      Catalog.hasMany(CatalogConversation, {
+        foreignKey: 'catalogId',
+        as: 'CatalogConversations',
+        onDelete: 'CASCADE'
+      });
       CatalogConversation.belongsTo(Catalog, { foreignKey: 'catalogId' });
       Catalog.belongsTo(User, { foreignKey: 'userId' });
     }

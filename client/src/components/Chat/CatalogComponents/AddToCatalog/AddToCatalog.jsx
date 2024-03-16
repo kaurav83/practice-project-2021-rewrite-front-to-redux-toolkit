@@ -34,7 +34,7 @@ const AddToCatalog = () => {
   const click = (values) => {
     dispatch(addChatToCatalog({
       chatId: addChatId,
-      catalogId: values.catalogId
+      catalogId: Number(values.catalogId)
     }));
   };
 
