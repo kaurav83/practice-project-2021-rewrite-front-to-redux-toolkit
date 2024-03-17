@@ -50,7 +50,7 @@ const DialogList = ({ preview, userId, removeChat }) => {
   const renderPreview = (filterFunc) => {
     const arrayList = [];
 
-    preview.map((chatPreview, index) => {
+    preview.forEach((chatPreview, index) => {
       const dialogNode = (
         <DialogBox
           interlocutor={chatPreview.interlocutor}

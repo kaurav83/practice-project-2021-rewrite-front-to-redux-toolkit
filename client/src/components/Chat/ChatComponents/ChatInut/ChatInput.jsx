@@ -36,7 +36,7 @@ const ChatInput = () => {
     }
 
     resetForm();
-  }, [dispatch, interlocutor, chatData]);
+  }, [dispatch, interlocutor, chatData, id]);
 
   return (
     <div className={styles.inputContainer}>
