@@ -487,7 +487,7 @@ const getCountMessagesByText = async () => {
       { $count: "locomotive" }
     ]);
 
-    console.log(`Number of records by word "паровоз" - ${records[0].locomotive}`);
+    console.log(`Number of records by word "паровоз" - ${records[0]?.locomotive}`);
   } catch (err) {
     console.log(err);
     loggerError(err)
