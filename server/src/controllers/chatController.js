@@ -70,7 +70,7 @@ module.exports.addMessage = async (req, res, next) => {
 };
 
 module.exports.getChat = async (req, res, next) => {
-  const participants = [req.tokenData.userId, req.body.interlocutorId];
+  const participants = [req.tokenData.userId, +req.headers.interlocutorid];
   participants.sort(
     (participant1, participant2) => participant1 - participant2);
   try {
@@ -98,7 +98,7 @@ module.exports.getChat = async (req, res, next) => {
     ]);
 
     const interlocutor = await userQueries.findUser(
-      { id: req.body.interlocutorId });
+      { id: +req.headers.interlocutorid });
     res.send({
       messages,
       interlocutor: {
@@ -262,7 +262,7 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 module.exports.deleteCatalog = async (req, res, next) => {
   try {
     await Catalog.remove(
-      { _id: req.body.catalogId, userId: req.tokenData.userId });
+      { _id: req.headers.catalogid, userId: req.tokenData.userId });
     res.end();
   } catch (err) {
     next(err);
