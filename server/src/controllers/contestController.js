@@ -9,7 +9,7 @@ const CONSTANTS = require('../constants');
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
   try {
-    const { body: { characteristic1, characteristic2 } } = req;
+    const { headers: { characteristic1, characteristic2 } } = req;
     const types = [characteristic1, characteristic2, 'industry'].filter(Boolean);
 
     const characteristics = await Select.findAll({
@@ -217,8 +217,8 @@ module.exports.setOfferStatus = async (req, res, next) => {
 module.exports.getCustomersContests = async (req, res, next) => {
   await Contest.findAll({
     where: { status: req.headers.status, userId: req.tokenData.userId },
-    limit: req.body.limit,
-    offset: req.body.offset ? req.body.offset : 0,
+    limit: +req.headers.limit,
+    offset: +req.headers.offset ? +req.headers.offset : 0,
     order: [['id', 'DESC']],
     include: [
       {
@@ -241,18 +241,18 @@ module.exports.getCustomersContests = async (req, res, next) => {
 };
 
 module.exports.getContests = async (req, res, next) => {
-  const predicates = UtilFunctions.createWhereForAllContests(req.body.typeIndex,
-    req.body.contestId, req.body.industry, req.body.awardSort);
+  const predicates = UtilFunctions.createWhereForAllContests(+req.headers.typeindex,
+    req.headers.contestid, req.headers.industry, req.headers.awardsort);
     await Contest.findAll({
     where: predicates.where,
     order: predicates.order,
-    limit: req.body.limit,
-    offset: req.body.offset ? req.body.offset : 0,
+    limit: +req.headers.limit,
+    offset: +req.headers.offset ? +req.headers.offset : 0,
     include: [
       {
         model: Offer,
-        required: req.body.ownEntries,
-        where: req.body.ownEntries ? { userId: req.tokenData.userId } : {},
+        required: !!+req.headers.ownentries,
+        where: !!+req.headers.ownentries ? { userId: req.tokenData.userId } : {},
         attributes: ['id'],
       },
     ],
