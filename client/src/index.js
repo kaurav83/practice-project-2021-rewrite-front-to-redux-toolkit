@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { StoreProvider } from './providers/StoreProvider';
 import * as serviceWorker from './serviceWorker';
@@ -8,11 +8,10 @@ import * as serviceWorker from './serviceWorker';
 import App from './App';
 import './index.css';
 
-ReactDOM.render(
+createRoot(document.getElementById('root')).render(
   <StoreProvider>
     <App />
-  </StoreProvider>,
-  document.getElementById('root')
+  </StoreProvider>
 );
 
 // If you want your app to work offline and load faster, you can change
