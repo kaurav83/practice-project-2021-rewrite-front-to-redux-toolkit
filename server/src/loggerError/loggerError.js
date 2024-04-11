@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { Cron } = require('croner');
 
 module.exports = (error) => {
   const errorLog = {
@@ -8,12 +9,16 @@ module.exports = (error) => {
     stackTrace: error.stack
   };
 
-  fs.appendFileSync('error.log', JSON.stringify(errorLog) + '\n');
+  fs.appendFileSync('logs/error.log', JSON.stringify(errorLog) + '\n');
 };
 
+if (!fs.existsSync('logs')) {
+  fs.mkdirSync('logs');
+}
+
 const copyAndTransformLog = () => {
-  if (fs.existsSync('error.log')) {
-    const originalContent = fs.readFileSync('error.log', 'utf8');
+  if (fs.existsSync('logs/error.log')) {
+    const originalContent = fs.readFileSync('logs/error.log', 'utf8');
     const transformedContent = originalContent.split('\n')
       .filter(line => line)
       .map(line => {
@@ -26,12 +31,14 @@ const copyAndTransformLog = () => {
         });
       }).join('\n');
 
-      const newFileName = `error_${new Date().toISOString().split('T')[0]}.log`;
+    const newFileName = `logs/error_${new Date().toISOString().split('T')[0]}.log`;
     fs.writeFileSync(newFileName, transformedContent);
-    fs.writeFileSync('error.log', '');
+    fs.writeFileSync('logs/error.log', '');
   }
-
-  setTimeout(copyAndTransformLog, 24 * 60 * 60 * 1000);
 };
+
+const job = new Cron('0 0 * * *', copyAndTransformLog);
+
+job.schedule();
 
 copyAndTransformLog();
