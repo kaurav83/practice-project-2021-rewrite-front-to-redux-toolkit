@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
@@ -8,6 +8,7 @@ import { CONSTANTS } from '../../constants';
 import { goToExpandedDialog } from '../../store/slices/chatSlice';
 import {
   getContestById,
+  setOfferStatus,
   clearSetOfferStatusError,
   changeEditContest,
   changeContestViewMode,
@@ -41,12 +42,11 @@ const ContestPage = (props) => {
   const { messagesPreview } = useSelector((state) => state.chatStore);
   const userStore = useSelector((state) => state.userStore);
   const role = userStore?.data?.role;
-  const filteredOffers = offers.filter((offer) => offer.status === 'won');
 
-  const getDataContest = () => {
+  const getDataContest = useCallback(() => {
     const { params } = props.match;
     dispatch(getContestById({ contestId: params.id }));
-  };
+  }, [dispatch, props.match]);
 
   useEffect(() => {
     getDataContest();
@@ -66,18 +66,20 @@ const ContestPage = (props) => {
   }, [userStore.data, props]);
 
   const setOffersList = () => {
-    const array = [];
-
-    for (let i = 0; i < filteredOffers.length; i++) {
-      array.push(
+    const array = offers.map((offer) => {
+      return (
         <OfferBox
-          data={filteredOffers[i]}
-          key={filteredOffers[i].id}
+          data={offer}
+          key={offer.id}
+          setOfferStatus={setOfferStatusContest}
           contestType={contestData.contestType}
           date={new Date()}
+          contestStatus={contestData.status}
+          contestCreatorId={contestData.User.id}
+          userId={userStore.data.id}
         />
-      );
-    }
+      )
+    });
 
     return array.length !== 0
       ? array
@@ -86,6 +88,21 @@ const ContestPage = (props) => {
           There is no suggestion at this moment
         </div>
       );
+  };
+
+  const setOfferStatusContest = async (creatorId, offerId, command) => {
+    await dispatch(clearSetOfferStatusError());
+    const { id, orderId, priority } = contestData;
+    const obj = {
+      command,
+      offerId,
+      creatorId,
+      orderId,
+      priority,
+      contestId: id,
+    };
+    await dispatch(setOfferStatus(obj));
+    await dispatch(getContestById({ contestId: props.match.params.id }));
   };
 
   const findConversationInfo = (interlocutorId) => {
@@ -187,7 +204,7 @@ const ContestPage = (props) => {
 
         <ContestSideBar
           contestData={contestData}
-          totalEntries={filteredOffers.length}
+          totalEntries={offers.length}
         />
       </div>
     );

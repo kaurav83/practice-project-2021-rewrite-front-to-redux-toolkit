@@ -58,13 +58,16 @@ export const updateContest = data => http.put('updateContest', data);
 export const setNewOffer = data => http.post('setNewOffer', data);
 export const setOfferStatus = data => http.post('setOfferStatus', data);
 export const changeMark = data => http.post('changeMark', data);
-export const getUsersWithOffers = (page) =>
-  http.post('getUsersWithOffers', {
-    page,
+export const getUsersWithOffers = (page) => {
+  return http.get('getUsersWithOffers', {
+    headers: {
+      page,
+    }
   });
+};
 
-export const getContestsWithoutPagination = () =>
-  http.get('getContestsWithoutPagination');
+export const changeStatusOfferByModerator = (data) =>
+  http.put('changeStatusOfferByModerator', data);
 
 // Chat's requests
 export const getPreviewChat = () => http.get('getPreview');

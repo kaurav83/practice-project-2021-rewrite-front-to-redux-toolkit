@@ -14,7 +14,8 @@ import styles from './ContestCreationPage.module.sass';
 const ContestCreationPage = (props) => {
   const formRef = useRef();
   const dispatch = useDispatch();
-  const { contestCreationStore, bundleStore } = useSelector((state) => state);
+  const contestCreationStore = useSelector((state) => state.contestCreationStore);
+  const bundleStore = useSelector((state) => state.bundleStore);
   
   useEffect(() => {
     if (!bundleStore.bundle) {

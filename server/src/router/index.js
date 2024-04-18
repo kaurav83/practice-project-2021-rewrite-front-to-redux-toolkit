@@ -52,15 +52,15 @@ router.get(
   contestController.getContestById,
 );
 
-router.post(
+router.get(
   '/getUsersWithOffers',
   checkToken.checkToken,
   contestController.getUsersWithOffers,
 );
 
-router.get(
-  '/getContestsWithoutPagination',
-  contestController.getContestsWithoutPagination,
+router.put(
+  '/changeStatusOfferByModerator',
+  contestController.changeStatusOfferByModerator
 );
 
 router.get(

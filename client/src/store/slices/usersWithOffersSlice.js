@@ -13,7 +13,6 @@ const initialState = {
   isFetching: true,
   error: null,
   offers: null,
-  contests: null,
 };
 
 //---------- getUsersWithOffers
@@ -41,35 +40,33 @@ const getUsersWithOffersExtraReducers = createExtraReducers({
   rejectedReducer,
 });
 
-
-// -------- getContestsWithoutPagination
-export const getContestsWithoutPagination = decorateAsyncThunk({
-  key: `${USERS_WITH_OFFERS_SLICE_NAME}/getContests`,
+// -------- setStatusOfferModeration
+export const setStatusOfferModeration = decorateAsyncThunk({
+  key: `${USERS_WITH_OFFERS_SLICE_NAME}/changeStatusModeration`,
   thunk: async payload => {
-    const { data } = await restController.getContestsWithoutPagination(payload);
+    const { data } = await restController.changeStatusOfferByModerator(payload);
 
     return data;
   }
 });
 
-const getContestsWithoutPaginationExtraReducers = createExtraReducers({
-  thunk: getContestsWithoutPagination,
-  pendingReducer: state => {
-    state.contests = null;
-    state.isFetching = true;
-    state.error = null;
-  },
+const setStatusOfferModerationExtraReducers = createExtraReducers({
+  thunk: setStatusOfferModeration,
   fulfilledReducer: (state, { payload }) => {
-    state.contests = payload;
+    state.offers.formattedData.forEach((offer) => {
+      if (offer.offer_id === payload.offerId) {
+        offer.approved = payload.command;
+      }
+    });
     state.isFetching = false;
     state.error = null;
   },
   rejectedReducer,
-})
+});
 
 const extraReducers = builder => {
   getUsersWithOffersExtraReducers(builder);
-  getContestsWithoutPaginationExtraReducers(builder);
+  setStatusOfferModerationExtraReducers(builder);
 };
 
 const usersWithOffersSlice = createSlice({

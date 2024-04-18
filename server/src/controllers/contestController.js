@@ -88,7 +88,13 @@ module.exports.getContestById = async (req, res, next) => {
         },
       ],
     });
+
     contestInfo = contestInfo.get({ plain: true });
+
+    contestInfo.Offers = contestInfo.Offers.filter(
+      (offer) => offer.approved === 'approve'
+    );
+
     contestInfo.Offers.forEach(offer => {
       if (offer.Rating) {
         offer.mark = offer.Rating.mark;
@@ -103,26 +109,33 @@ module.exports.getContestById = async (req, res, next) => {
 };
 
 module.exports.getUsersWithOffers = async (req, res, next) => {
-  const page = 1;
+  const page = +req.headers.page || 1;
   const itemsPerPage = 10;
 
   await User.findAndCountAll({
     attributes: [
-      ['id', 'user_id'],
       'displayName',
       'email'
     ],
-    include: [{
-      model: Offer,
-      attributes: [
-        ['id', 'offer_id'],
-        'contestId',
-        'text',
-        'status'
-      ],
-      required: true
-    }],
-    offset: (req.body.page - 1) * itemsPerPage,
+    include: [
+      {
+        model: Offer,
+        attributes: [
+          'id',
+          'text',
+          'fileName',
+          'approved'
+        ],
+        include: [
+          {
+            model: Contest,
+            attributes: ['status']
+          }
+        ],
+        required: true,
+      },
+    ],
+    offset: (page - 1) * itemsPerPage,
     limit: itemsPerPage,
     subQuery: false,
   })
@@ -131,15 +144,15 @@ module.exports.getUsersWithOffers = async (req, res, next) => {
       const users = result.rows || [];
 
       const formattedData = users.reduce((acc, user) => {
-        user.Offers.forEach(offer => {
+        user.Offers.forEach((offer) => {
           acc.push({
-            offer_id: offer.dataValues.offer_id,
+            offer_id: offer.id,
             text: offer.text,
-            status: offer.status,
-            user_id: user.dataValues.user_id,
+            fileName: offer.fileName,
             displayName: user.displayName,
             email: user.email,
-            contestId: offer.contestId,
+            status: offer.Contest ? offer.Contest.status : null,
+            approved: offer.approved
           });
         });
         return acc;
@@ -149,7 +162,7 @@ module.exports.getUsersWithOffers = async (req, res, next) => {
 
       res.send({
         formattedData,
-        page: req.body.page,
+        page: req.headers.page,
         itemsPerPage,
         totalPages,
         totalCount: count
@@ -161,22 +174,34 @@ module.exports.getUsersWithOffers = async (req, res, next) => {
     });
 };
 
-module.exports.getContestsWithoutPagination = async (req, res, next) => {
-  await Contest.findAll({
-    attributes: [
-      'id',
-      'priority',
-      'orderId'
-    ],
-  })
-    .then((contests) => {
-      res.send(contests);
-    })
-    .catch(error => {
-      next(new ServerError());
-      loggerError(error);
+module.exports.changeStatusOfferByModerator = async (req, res, next) => {
+  const {
+    command,
+    offerId,
+    email,
+  } = req.body;
+  try {
+    await Offer.update(
+      { approved: command },
+      {
+        where: {
+          id: offerId
+        }
+      }
+    );
+
+    await sendEmail(email, command, offerId);
+
+    const offer = await Offer.findByPk(offerId);
+    res.status(200).json({
+      offerId: offer.id,
+      command: offer.approved
     });
-}
+  } catch (err) {
+    next(err);
+    loggerError(err);
+  }
+};
 
 module.exports.downloadFile = async (req, res, next) => {
   const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
@@ -238,10 +263,10 @@ const resolveOffer = async (
   contestId, creatorId, orderId, offerId, priority, transaction) => {
   const finishedContest = await contestQueries.updateContestStatus({
     status: sequelize.literal(`   CASE
-            WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'
-            WHEN "orderId"='${orderId}' AND "priority"=${priority +
-      1}  THEN '${CONSTANTS.CONTEST_STATUS_ACTIVE}'
-            ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
+            WHEN "id"=${ contestId }  AND "orderId"='${ orderId }' THEN '${ CONSTANTS.CONTEST_STATUS_FINISHED }'
+            WHEN "orderId"='${ orderId }' AND "priority"=${ priority +
+    1 }  THEN '${ CONSTANTS.CONTEST_STATUS_ACTIVE }'
+            ELSE '${ CONSTANTS.CONTEST_STATUS_PENDING }'
             END
     `),
   }, { orderId }, transaction);
@@ -250,8 +275,8 @@ const resolveOffer = async (
     creatorId, transaction);
   const updatedOffers = await contestQueries.updateOfferStatus({
     status: sequelize.literal(` CASE
-            WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
-            ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
+            WHEN "id"=${ offerId } THEN '${ CONSTANTS.OFFER_STATUS_WON }'
+            ELSE '${ CONSTANTS.OFFER_STATUS_REJECTED }'
             END
     `),
   }, {
@@ -265,37 +290,34 @@ const resolveOffer = async (
       arrayRoomsId.push(offer.userId);
     }
   });
-
+  controller.getNotificationController().emitChangeOfferStatus(arrayRoomsId,
+    'Someone of yours offers was rejected', contestId);
   controller.getNotificationController().emitChangeOfferStatus(creatorId,
     'Someone of your offers WIN', contestId);
-  return updatedOffers[0].dataValues;
+  return updatedOffers[ 0 ].dataValues;
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
   let transaction;
-
-  if (req.body.command === 'resolve') {
+  if (req.body.command === 'reject') {
+    try {
+      const offer = await rejectOffer(req.body.offerId, req.body.creatorId,
+        req.body.contestId);
+      res.send(offer);
+    } catch (err) {
+      next(err);
+    }
+  } else if (req.body.command === 'resolve') {
     try {
       transaction = await sequelize.transaction();
       const winningOffer = await resolveOffer(req.body.contestId,
         req.body.creatorId, req.body.orderId, req.body.offerId,
         req.body.priority, transaction);
-      await sendEmail(req.body.email, req.body.command, req.body.offerId);
       res.send(winningOffer);
     } catch (err) {
       transaction.rollback();
       next(err);
       loggerError(err);
-    }
-  } else if (req.body.command === 'reject') {
-    try {
-      const offer = await rejectOffer(req.body.offerId, req.body.creatorId,
-        req.body.contestId);
-
-      await sendEmail(req.body.email, req.body.command, req.body.offerId);
-      res.send(offer);
-    } catch (err) {
-      next(err);
     }
   }
 };
@@ -332,7 +354,7 @@ module.exports.getCustomersContests = async (req, res, next) => {
 module.exports.getContests = async (req, res, next) => {
   const predicates = UtilFunctions.createWhereForAllContests(+req.headers.typeindex,
     req.headers.contestid, req.headers.industry, req.headers.awardsort);
-    await Contest.findAll({
+  await Contest.findAll({
     where: predicates.where,
     order: predicates.order,
     limit: +req.headers.limit,

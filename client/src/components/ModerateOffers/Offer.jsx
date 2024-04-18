@@ -5,34 +5,32 @@ import { CONSTANTS } from '../../constants';
 import Modal from '../Modal/Modal';
 import styles from './ModerateOffers.module.sass';
 
-const Offer = ({ offer, setOfferStatus }) => {
+const Offer = ({ offer, setOfferModeration }) => {
   const {
+    offer_id,
     displayName,
     email,
     status,
     text,
-    offer_id,
-    user_id,
-    contestId,
+    fileName,
+    approved,
   } = offer;
 
   const [isOpenModal, setOpenModal] = useState(false);
-  const [statusOffer, setStatusOffer] = useState('');
+  const [statusModeration, setStatusModeration] = useState('');
 
-  const resolveOffer = (statusOffer) => {
+  const approveOffer = (status) => {
     setOpenModal(true);
-    setStatusOffer(statusOffer);
+    setStatusModeration(status);
   };
 
-  const rejectOffer = (statusOffer) => {
+  const disapproveOffer = (status) => {
     setOpenModal(true);
-    setStatusOffer(statusOffer);
+    setStatusModeration(status);
   };
 
   return (
     <tr>
-      <td>{offer_id}</td>
-
       <td>{displayName}</td>
 
       <td>
@@ -41,22 +39,38 @@ const Offer = ({ offer, setOfferStatus }) => {
         </a>
       </td>
 
-      <td>
-        {text}
-      </td>
+      {text && (
+        <td>
+          {text}
+        </td>
+      )}
+
+      {fileName && (
+        <td>
+          {fileName}
+        </td>
+      )}
 
       <td>{status}</td>
 
-      {offer.status === CONSTANTS.OFFER_STATUS_PENDING
+      {offer.approved === CONSTANTS.OFFER_MODERATION
         ? (
           <td>
             <div className={styles.btnsContainer}>
-              <button type="button" onClick={() => resolveOffer('resolve')} className={styles.resolveBtn}>
-                Resolve
+              <button
+                type="button"
+                onClick={() => approveOffer(CONSTANTS.OFFER_APPROVE)}
+                className={styles.resolveBtn}
+              >
+                Approve
               </button>
 
-              <button type="button" onClick={() => rejectOffer('reject')} className={styles.rejectBtn}>
-                Reject
+              <button
+                type="button"
+                onClick={() => disapproveOffer(CONSTANTS.OFFER_DISAPPROVE)}
+                className={styles.rejectBtn}
+              >
+                Disapprove
               </button>
             </div>
 
@@ -67,15 +81,15 @@ const Offer = ({ offer, setOfferStatus }) => {
 
                   <div className={styles.modalButtonGroup}>
                     <button
-                      onClick={() => setOfferStatus(user_id, offer_id, statusOffer, contestId, email)}
-                      className={styles.modalBtn}  
+                      onClick={() => setOfferModeration(offer_id, statusModeration, email)}
+                      className={styles.modalBtn}
                     >
                       Yes
                     </button>
 
                     <button
                       onClick={() => setOpenModal(false)}
-                      className={styles.modalBtn}    
+                      className={styles.modalBtn}
                     >
                       No
                     </button>
@@ -87,7 +101,7 @@ const Offer = ({ offer, setOfferStatus }) => {
         )
         : (
           <td>
-            <span>-</span>
+            <span>{approved}</span>
           </td>
         )}
     </tr>

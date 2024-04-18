@@ -4,9 +4,6 @@ const CONSTANTS = require('../constants');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.sequelize.query(
-      `ALTER TYPE "enum_Users_role" ADD VALUE 'moderator';`
-    );
     const passwordModerator = await bcrypt.hash('pass_moder', 10);
     const accessTokenModerator = jwt.sign({
       firstName: 'Moderator',
