@@ -5,13 +5,13 @@ const checkToken = require('../middlewares/checkToken');
 const upload = require('../utils/fileUpload');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 
-contestRouter.post(
+contestRouter.get(
   '/dataForContest',
   checkToken.checkToken,
   contestController.dataForContest,
 );
 
-contestRouter.post(
+contestRouter.get(
   '/getCustomersContests',
   checkToken.checkToken,
   contestController.getCustomersContests,
@@ -24,18 +24,13 @@ contestRouter.get(
   contestController.getContestById,
 );
 
-contestRouter.post(
+contestRouter.get(
   '/getUsersWithOffers',
   checkToken.checkToken,
   contestController.getUsersWithOffers,
 );
 
 contestRouter.get(
-  '/getContestsWithoutPagination',
-  contestController.getContestsWithoutPagination,
-);
-
-contestRouter.post(
   '/getAllContests',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,
@@ -48,7 +43,7 @@ contestRouter.get(
   contestController.downloadFile,
 );
 
-contestRouter.post(
+contestRouter.put(
   '/updateContest',
   checkToken.checkToken,
   upload.updateContestFile,
@@ -68,6 +63,11 @@ contestRouter.post(
   checkToken.checkToken,
   basicMiddlewares.onlyForCustomerWhoCreateContest,
   contestController.setOfferStatus,
+);
+
+contestRouter.put(
+  '/changeStatusOfferByModerator',
+  contestController.changeStatusOfferByModerator
 );
 
 module.exports = contestRouter;

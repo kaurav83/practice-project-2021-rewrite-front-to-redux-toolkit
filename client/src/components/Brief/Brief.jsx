@@ -14,8 +14,9 @@ import styles from './Brief.module.sass';
 
 const Brief = (props) => {
   const dispatch = useDispatch();
-  const { isEditContest } = useSelector((state) => state.contestByIdStore);
-  const { contestUpdationStore, userStore } = useSelector((state) => state);
+  const isEditContest = useSelector((state) => state.contestByIdStore.isEditContest);
+  const contestUpdationStore = useSelector((state) => state.contestUpdationStore);
+  const userStore = useSelector((state) => state.userStore);
 
   const setNewContestData = useCallback((values) => {
     const data = new FormData();

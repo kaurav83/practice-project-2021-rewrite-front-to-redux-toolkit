@@ -11,7 +11,7 @@ router.use('/', contestRouter);
 
 router.use('/', chatRouter);
 
-router.post(
+router.get(
   '/getUser',
   checkToken.checkAuth,
 );

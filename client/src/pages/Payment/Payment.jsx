@@ -12,14 +12,9 @@ import styles from './Payment.module.sass';
 
 const Payment = (props) => {
   const dispatch = useDispatch();
-  const {
-    payment: {
-      error
-    },
-    contestCreationStore: {
-      contests
-    }
-  } = useSelector((state) => state);
+
+  const { error } = useSelector((state) => state.payment);
+  const { contests } = useSelector((state) => state.contestCreationStore);
 
   useEffect(() => {
     if (isEmpty(contests)) {

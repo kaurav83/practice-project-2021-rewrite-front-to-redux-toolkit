@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setOfferStatus } from '../../store/slices/contestByIdSlice';
 import {
   getUsersWithOffers,
-  getContestsWithoutPagination,
+  setStatusOfferModeration,
 } from '../../store/slices/usersWithOffersSlice';
 
 import Pagination from '../Pagination/Pagination';
@@ -18,34 +17,25 @@ const ModerateOffers = () => {
   const {
     isFetching,
     offers,
-    contests,
   } = useSelector((state) => state.usersWithOffers);
 
   useEffect(() => {
     dispatch(getUsersWithOffers(1));
-    dispatch(getContestsWithoutPagination());
   }, [dispatch]);
 
-  const setOfferStatusContest = async (creatorId, offerId, command, contestId, email) => {
-    const { orderId, priority } = contests.find((contest) => contest.id === contestId);
-
+  const setStatusModeration = async (offerId, command, email) => {
     const obj = {
       command,
       offerId,
-      creatorId,
-      orderId,
-      priority,
-      contestId,
       email,
     };
-    await dispatch(setOfferStatus(obj));
+
+    await dispatch(setStatusOfferModeration(obj));
     await dispatch(getUsersWithOffers(offers.page));
-    await dispatch(getContestsWithoutPagination());
   };
 
   const handleChangePage = (page) => {
     dispatch(getUsersWithOffers(page));
-    dispatch(getContestsWithoutPagination());
   }
 
   if (isFetching) {
@@ -70,8 +60,6 @@ const ModerateOffers = () => {
         <table>
           <thead>
             <tr>
-              <th>OrderId</th>
-
               <th>Display name</th>
 
               <th>Email</th>
@@ -90,7 +78,7 @@ const ModerateOffers = () => {
                 <Offer
                   offer={offer}
                   key={offer.offer_id}
-                  setOfferStatus={setOfferStatusContest}
+                  setOfferModeration={setStatusModeration}
                 />
               )
             })}
@@ -100,7 +88,7 @@ const ModerateOffers = () => {
 
       <div className={styles.paginationOffers}>
         <Pagination
-          currentPage={offers.page}
+          currentPage={+offers.page}
           totalCount={offers.totalCount}
           pageSize={offers.itemsPerPage}
           onPageChange={(page) => handleChangePage(page)}

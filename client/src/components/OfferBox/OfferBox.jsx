@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Rating from 'react-rating';
 import { withRouter } from 'react-router-dom';
@@ -13,10 +13,18 @@ import {
 } from '../../store/slices/contestByIdSlice';
 import { CONSTANTS } from '../../constants';
 
+import Modal from '../Modal/Modal';
 import styles from './OfferBox.module.sass';
 
 const OfferBox = (props) => {
-  const { data, contestType } = props;
+  const {
+    data,
+    contestType,
+    contestCreatorId,
+    userId,
+    contestStatus
+  } = props;
+
   const {
     avatar,
     firstName,
@@ -28,6 +36,9 @@ const OfferBox = (props) => {
   const dispatch = useDispatch();
   const { id, role } = useSelector((state) => state.userStore.data);
   const { messagesPreview } = useSelector((state) => state.chatStore);
+
+  const [isOpenModal, setOpenModal] = useState(false);
+  const [statusOffer, setStatusOffer] = useState('');
 
   const findConversationInfo = () => {
     const participants = [id, data.User.id];
@@ -48,6 +59,24 @@ const OfferBox = (props) => {
     }
 
     return null;
+  };
+
+  const needButtons = (offerStatus) => {
+    return (
+      contestCreatorId === userId &&
+      contestStatus === CONSTANTS.CONTEST_STATUS_ACTIVE &&
+      offerStatus === CONSTANTS.OFFER_STATUS_PENDING
+    );
+  };
+
+  const resolveOffer = () => {
+    setOpenModal(true);
+    setStatusOffer('resolve');
+  };
+
+  const rejectOffer = () => {
+    setOpenModal(true);
+    setStatusOffer('reject');
   };
 
   const changeMarkCallback = (value) => {
@@ -87,6 +116,11 @@ const OfferBox = (props) => {
       interlocutor: data.User,
       conversationData: findConversationInfo(),
     }));
+  };
+
+  const handleSetStatusOffer = () => {
+    setOpenModal(false);
+    props.setOfferStatus(data.User.id, data.id, statusOffer)
   };
 
   return (
@@ -142,7 +176,7 @@ const OfferBox = (props) => {
             />
           </div>
         </div>
-        
+
         <div className={styles.responseConainer}>
           {contestType === CONSTANTS.LOGO_CONTEST
             ? (
@@ -193,6 +227,41 @@ const OfferBox = (props) => {
 
         {role !== CONSTANTS.CREATOR && (
           <i onClick={goChat} className="fas fa-comments" />
+        )}
+
+        {needButtons(data.status) && (
+          <div className={styles.btnsContainer}>
+            <div onClick={() => resolveOffer()} className={styles.resolveBtn}>
+              Resolve
+            </div>
+
+            <div onClick={() => rejectOffer()} className={styles.rejectBtn}>
+              Reject
+            </div>
+          </div>
+        )}
+
+        {isOpenModal && (
+          <Modal onClose={() => setOpenModal(false)}>
+            <div className={styles.modalContainer}>
+              <p className={styles.modalText}>Are you sure?</p>
+              <div className={styles.modalButtonGroup}>
+                <button
+                  onClick={handleSetStatusOffer}
+                  className={styles.modalBtn}
+                >
+                  Yes
+                </button>
+
+                <button
+                  onClick={() => setOpenModal(false)}
+                  className={styles.modalBtn}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </Modal>
         )}
       </div>
     </div>

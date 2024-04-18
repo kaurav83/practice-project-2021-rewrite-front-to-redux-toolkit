@@ -38,7 +38,7 @@ userRouter.post(
   userController.changeMark,
 );
 
-userRouter.post(
+userRouter.put(
   '/updateUser',
   checkToken.checkToken,
   upload.uploadAvatar,

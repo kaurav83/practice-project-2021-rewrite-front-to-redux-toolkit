@@ -93,7 +93,7 @@ module.exports.getChat = async (req, res, next) => {
     });
 
     const conversationInterlocutor = await ConversationParticipant.findAll({
-      where: { participantId: req.body.interlocutorId },
+      where: { participantId: +req.headers.interlocutorid },
       attributes: ['conversationId'],
       raw: true
     });
@@ -107,7 +107,7 @@ module.exports.getChat = async (req, res, next) => {
       where: { conversationId: commonConversationIds }
     });
 
-    const interlocutor = await userQueries.findUser({ id: req.body.interlocutorId });
+    const interlocutor = await userQueries.findUser({ id: +req.headers.interlocutorid });
 
     res.send({
       messages,
@@ -431,15 +431,13 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 };
 
 module.exports.deleteCatalog = async (req, res, next) => {
-  const { catalogId } = req.body;
-
   try {
     const numDestroyed = await Catalog.destroy({
-      where: { id: catalogId }
+      where: { id: +req.headers.catalogid }
     });
 
     if (numDestroyed) {
-      res.status(200).send(`The catalog with id=${catalogId} and all related chats have been successfully deleted.`);
+      res.status(200).send(`The catalog with id=${req.headers.catalogid} and all related chats have been successfully deleted.`);
     } else {
       res.status(404).send('The catalog was not found or has already been deleted.');
     }
@@ -447,7 +445,7 @@ module.exports.deleteCatalog = async (req, res, next) => {
     next(err);
     loggerError(err);
   }
-}
+};
 
 module.exports.getCatalogs = async (req, res, next) => {
   try {

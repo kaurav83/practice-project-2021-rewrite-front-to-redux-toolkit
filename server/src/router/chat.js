@@ -9,25 +9,25 @@ chatRouter.post(
   chatController.addMessage,
 );
 
-chatRouter.post(
+chatRouter.get(
   '/getChat',
   checkToken.checkToken,
   chatController.getChat,
 );
 
-chatRouter.post(
+chatRouter.get(
   '/getPreview',
   checkToken.checkToken,
   chatController.getPreview,
 );
 
-chatRouter.post(
+chatRouter.put(
   '/blackList',
   checkToken.checkToken,
   chatController.blackList,
 );
 
-chatRouter.post(
+chatRouter.put(
   '/favorite',
   checkToken.checkToken,
   chatController.favoriteChat,
@@ -39,7 +39,7 @@ chatRouter.post(
   chatController.createCatalog,
 );
 
-chatRouter.post(
+chatRouter.put(
   '/updateNameCatalog',
   checkToken.checkToken,
   chatController.updateNameCatalog,
@@ -51,19 +51,19 @@ chatRouter.post(
   chatController.addNewChatToCatalog,
 );
 
-chatRouter.post(
+chatRouter.put(
   '/removeChatFromCatalog',
   checkToken.checkToken,
   chatController.removeChatFromCatalog,
 );
 
-chatRouter.post(
+chatRouter.delete(
   '/deleteCatalog',
   checkToken.checkToken,
   chatController.deleteCatalog,
 );
 
-chatRouter.post(
+chatRouter.get(
   '/getCatalogs',
   checkToken.checkToken,
   chatController.getCatalogs,
