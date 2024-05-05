@@ -1,4 +1,9 @@
 Command for deploying project
+```sh
 docker compose --file ./docker-compose-dev.yaml up --build
+```
 
-Load project on localhost:5000
+Load project on 
+```sh
+http://localhost:5000/
+```
